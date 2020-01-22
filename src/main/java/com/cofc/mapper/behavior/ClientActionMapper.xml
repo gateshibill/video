@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.behavior.ClientActionService">
+	<resultMap type="com.cofc.pojo.behavior.ClientAction" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+		<result column="device_brand" property="deviceBrand" jdbcType="VARCHAR" />		
+		<result column="device_ip" property="deviceIP" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="VARCHAR" />		
+		<result column="user_id" property="userId" jdbcType="INTEGER" />		
+		<result column="from_id" property="fromId" jdbcType="INTEGER" />
+		<result column="from_way" property="fromWay" jdbcType="INTEGER" />
+		
+		<result column="page_id" property="pageId" jdbcType="INTEGER" />
+		<result column="page_name" property="pageName" jdbcType="VARCHAR" />
+		
+		<result column="column_id" property="columnId" jdbcType="INTEGER" />
+		<result column="column_name" property="columnName" jdbcType="VARCHAR" />	
+
+		<result column="object_id" property="objectId" jdbcType="INTEGER" />
+		<result column="object_name" property="objectName" jdbcType="VARCHAR" />
+		
+		<result column="action_id" property="actionId" jdbcType="INTEGER" />
+		<result column="action_name" property="actionName" jdbcType="VARCHAR" />
+				
+		<result column="sub_action_id" property="subActionId" jdbcType="INTEGER" />
+		<result column="sub_action_name" property="subActionName" jdbcType="VARCHAR" />
+
+		<result column="super_id" property="superId" jdbcType="INTEGER" />
+								
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+
+	</resultMap>
+	<insert id="insert" parameterType="com.cofc.pojo.behavior.ClientAction"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_caction(app_id,device_id,version,device_brand,device_ip,user_id,from_id,from_way,page_id,page_name,column_id,column_name,object_id,object_name,action_id,action_name,sub_action_id,sub_action_name,super_id,create_time)
+		values(#{appId},#{deviceId},#{version},#{deviceBrand},#{deviceIp},#{userId},#{fromId},#{fromWay},#{pageId},#{pageName},#{columnId},#{columnName},#{objectId},#{objectName},#{actionId},#{actionName},
+		#{subActionId},#{subActionName},#{superId},#{createTime})
+	</insert>
+
+	<delete id="delete">
+		delete from mac_caction where id =#{id}
+	</delete>
+
+
+</mapper>

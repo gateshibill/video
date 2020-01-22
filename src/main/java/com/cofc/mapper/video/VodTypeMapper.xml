@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cofc.service.video.VodTypeService">
+	<resultMap type="com.cofc.pojo.video.VodType" id="BaseResultMap">
+		<id column="type_id" property="typeId" jdbcType="SMALLINT" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
+		<result column="type_en" property="typeEn" jdbcType="VARCHAR" />
+		<result column="type_sort" property="typeSort" jdbcType="VARCHAR" />	
+		<result column="type_status" property="typeStatus" jdbcType="VARCHAR" />	
+		<result column="type_key" property="typeKey" jdbcType="VARCHAR" />				
+		<result column="type_des" property="typeDes" jdbcType="VARCHAR" />
+		<result column="type_title" property="typeTitle" jdbcType="VARCHAR" />				
+	</resultMap>
+	<insert id="addVodType" parameterType="com.cofc.pojo.video.VodType"
+		useGeneratedKeys="true" keyProperty="type_id">
+		insert into
+		mac_type(app_id,type_name,type_en,type_sort,type_status,type_key,type_des,type_title)
+		values(#{appId},#{typeName},#{typeEn},#{typeSort},#{typeStatus},#{typeKey},#{typeDes},#{typeTitle})
+	</insert>
+
+	<select id="getVodTypeList" resultMap="BaseResultMap">
+	select * from mac_type where 1=type_status
+	</select>
+</mapper>

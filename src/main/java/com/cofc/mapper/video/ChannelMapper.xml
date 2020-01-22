@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.ChannelService">
+	<resultMap type="com.cofc.pojo.video.Channel"
+		id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="category" property="category"
+			jdbcType="VARCHAR" />
+		<result column="delay" property="delay" jdbcType="INTEGER" />
+		<result column="play_url" property="playUrl" jdbcType="VARCHAR" />
+		<result column="reserve_urls" property="reserveUrls"
+			jdbcType="VARCHAR" />
+		<result column="recycle_urls" property="recycleUrls"
+			jdbcType="VARCHAR" />
+		<result column="poster_url" property="posterUrl"
+			jdbcType="VARCHAR" />
+		<result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="level" property="level" jdbcType="VARCHAR" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="rcmd" property="rcmd" jdbcType="INTEGER" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="language" property="language"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime"
+			jdbcType="TIMESTAMP" />
+		<result column="last_time" property="lastTime"
+			jdbcType="TIMESTAMP" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="tvid" property="tvid" jdbcType="VARCHAR" />
+		<result column="parts" property="parts" jdbcType="VARCHAR" />
+		<result column="seo" property="seo" jdbcType="VARCHAR" />
+		<result column="server_url" property="serverUrl"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="addChannel"
+		parameterType="com.cofc.pojo.video.Channel" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		mac_channel(app_id,rank,name,category,delay,play_url,reserve_urls,poster_url,logo_url,type,level,group_id,rcmd,country,language,create_time,last_time,source,status,tvid,parts,seo,server_url)
+		values(#{appId},#{rank},#{name},#{category},#{delay},#{playUrl},#{reserveUrls},#{posterUrl},#{logoUrl},#{type},#{level},#{groupId},#{rcmd},#{country},#{language},#{createTime},#{lastTime},#{source},#{status},#{tvid},#{parts},#{seo},#{serverUrl})
+	</insert>
+	<update id="updateChannel"
+		parameterType="com.cofc.pojo.video.Channel">
+		update mac_channel
+		<trim prefix="set" suffixOverrides=",">
+			<if test="type!=null">type = #{type},</if>
+			<if test="groupId!=null">group_id = #{groupId},</if>
+			<if test="rcmd!=null">rcmd = #{rcmd},</if>
+			<if test="status!=null">status = #{status},</if>
+			<if test="rank!=null">rank = #{rank},</if>
+			<if test="name!=null and name!=''">name = #{name},</if>
+			<if test="posterUrl!=null and posterUrl!=''">poster_url = #{posterUrl},</if>
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+			<if test="reserveUrls!=null and reserveUrls!=''">reserve_urls = #{reserveUrls},</if>
+			<if test="logoUrl!=null and logoUrl!=''">logo_url = #{logoUrl},</if>
+			<if test="delay!=null and delay!=''">delay = #{delay},</if>
+		</trim>
+		where id = #{id}
+	</update>
+	<delete id="delChannel"
+		parameterType="com.cofc.pojo.video.Channel">
+		delete from mac_channel where id = #{id}
+	</delete>
+
+	<select id="getChannelCount" resultType="int">
+		select count(*) from
+		mac_channel
+	</select>
+
+	<select id="getChannelById" resultMap="BaseResultMap">
+		select * from mac_channel
+		where id = #{id}
+	</select>
+	<select id="getChannelByAssemble"
+		parameterType="com.cofc.pojo.video.Channel" resultMap="BaseResultMap">
+		select * from
+		mac_channel
+		where name = #{name}
+		and source = #{source}
+		and category= #{category}
+	</select>
+	<select id="getChannelListByRcmd" resultMap="BaseResultMap">
+		select * from mac_channel where rcmd >0
+		order by rcmd asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+
+	<select id="getChannelList" resultMap="BaseResultMap">
+		select * from mac_channel
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+
+	<select id="getChannelListByType" resultMap="BaseResultMap">
+		select * from mac_channel
+		where (type=#{type} or 0=#{type} )
+		and (group_id=#{groupId} or 0=#{groupId} )
+		and 1=status
+		order by rank asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	<select id="getChannelListByAssemble" resultMap="BaseResultMap">
+		select * from mac_channel
+		where (type=#{type} or 0=#{type} )
+		and (group_id=#{groupId} or 0=#{groupId} )
+		<if test="status != null">
+			and status=#{status}
+		</if>
+		<if test="name != null and name!=''">
+			and name=#{name}
+		</if>
+		order by rank asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	<select id="getChannelCountByAssemble" resultType="int">
+		select count(*) from mac_channel
+		where (type=#{type} or 0=#{type} )
+		and (group_id=#{groupId} or 0=#{groupId} )
+		<if test="status != null">
+			and status=#{status}
+		</if>
+		<if test="name != null and name!=''">
+			and name=#{name}
+		</if>
+	</select>
+</mapper>

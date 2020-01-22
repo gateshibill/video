@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.AnchorService">
+	<resultMap type="com.cofc.pojo.video.Anchor" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />	
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />			
+		<result column="type" property="type" jdbcType="INTEGER" />		
+		<result column="sub_type" property="subType" jdbcType="INTEGER" />		
+		<result column="play_url" property="playUrl" jdbcType="VARCHAR" />					
+		<result column="poster_url" property="posterUrl" jdbcType="VARCHAR" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />	
+		<result column="gender" property="gender" jdbcType="INTEGER" />	
+		<result column="age" property="age" jdbcType="INTEGER" />	
+		<result column="content" property="content" jdbcType="VARCHAR" />							
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />					
+		<result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />		
+	</resultMap>
+	<insert id="addAnchor" parameterType="com.cofc.pojo.video.Anchor"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_anchor(app_id,name,rank,type,sub_type,play_url,poster_url,online,status,gender,age,content,create_time,start_time,end_time,last_time)
+		values(#{appId},#{name},#{rank},#{type},#{subType},#{playUrl},#{posterUrl},#{online},#{status},#{gender},#{age},#{content},#{createTime},#{startTime},#{endTime},#{lastTime})
+	</insert>
+	<update id="updateAnchor" parameterType="com.cofc.pojo.video.Anchor">
+		update mac_anchor
+		<trim prefix="set" suffixOverrides=",">
+			<if test="online!=null">online = #{online},</if>
+			<if test="status!=null">status = #{status},</if>			
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+		</trim>
+		where name = #{name}
+	</update>
+	<delete id="delAnchor" parameterType="com.cofc.pojo.video.Anchor">
+		delete from mac_anchor where id = #{id}
+	</delete>
+
+	<select id="getAnchorCount" resultType="int">
+		select count(*) from mac_anchor 
+	</select>
+
+	<select id="getAnchorById" resultMap="BaseResultMap">
+		select * from mac_anchor where id = #{id}
+	</select>	
+
+	<select id="getAnchorByAssemble" resultMap="BaseResultMap">
+		select * from mac_anchor where name = #{name}
+	</select>
+	<select id="getAnchorListByAssemble" resultMap="BaseResultMap">
+		select * from mac_anchor where 1=1
+		 <if test="name != null and name!=''">
+			and name=#{name}
+		 </if>
+		 <if test="status != null">
+			and status=#{status}
+		 </if>	
+		 order by create_time desc
+		 <if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>	
+	</select>
+	<select id="getAnchorCountByAssemble" resultType="int">
+		select count(*) from mac_anchor where 1=1
+		 <if test="name != null and name!=''">
+			and name=#{name}
+		 </if>
+		 <if test="status != null">
+			and status=#{status}
+		 </if>	
+	</select>			 	
+	<select id="getAnchorList" resultMap="BaseResultMap">
+		select * from mac_anchor 
+		where (status=1)
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	
+	<select id="getAnchorListByType" resultMap="BaseResultMap">       
+		select * from mac_anchor
+		 where (type=#{type} or 0=#{type} )
+		 and (sub_type=#{subType} or 0=#{subType} )
+		 and 1=status
+		 order by rank asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>		 	
+</mapper>

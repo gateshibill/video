@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.TopicService">
+	<resultMap type="com.cofc.pojo.video.Topic" id="BaseResultMap">
+		<id column="topic_id" property="topicId" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />	
+		<result column="topic_name" property="topicName" jdbcType="VARCHAR" />
+		<result column="topic_en" property="topicEn" jdbcType="VARCHAR" />			
+		<result column="topic_sub" property="topicSub" jdbcType="VARCHAR" />		
+		<result column="topic_status" property="topicStatus" jdbcType="INTEGER" />	
+		<result column="topic_sort" property="topicSort" jdbcType="INTEGER" />			
+		<result column="topic_letter" property="topicLetter" jdbcType="VARCHAR" />	
+					
+		<result column="topic_color" property="topicColor" jdbcType="VARCHAR" />	
+		<result column="topic_tpl" property="topicTpl" jdbcType="VARCHAR" />		
+		<result column="topic_type" property="topicType" jdbcType="VARCHAR" />
+		<result column="topic_pic" property="topicPic" jdbcType="VARCHAR" />
+		<result column="topic_pic_thumb" property="topicPicThumb" jdbcType="VARCHAR" />
+		<result column="topic_pic_slide" property="topicPicSlide" jdbcType="VARCHAR" />
+		<result column="topic_key" property="topicKey" jdbcType="VARCHAR" />
+		<result column="topic_des" property="topicDes" jdbcType="VARCHAR" />		
+		<result column="topic_title" property="topicTitle" jdbcType="VARCHAR" />		
+		<result column="topic_blurb" property="topicBlurb" jdbcType="VARCHAR" />
+		<result column="topic_remarks" property="topicRemarks" jdbcType="VARCHAR" />
+																
+		<result column="topic_level" property="topicLevel" jdbcType="INTEGER" />
+		<result column="topic_up" property="topicUp" jdbcType="INTEGER" />	
+		<result column="topic_down" property="topicDown" jdbcType="INTEGER" />	
+		<result column="topic_score" property="topicScore" jdbcType="DOUBLE" />	
+		<result column="topic_score_all" property="topicScoreAll" jdbcType="INTEGER" />							
+		<result column="topic_score_num" property="topicScoreNum" jdbcType="INTEGER" />
+		<result column="topic_hits" property="topicHits" jdbcType="INTEGER" />
+		<result column="topic_hits_day" property="topicHitsDay" jdbcType="INTEGER" />					
+		<result column="topic_hits_week" property="topicHitsWeek" jdbcType="INTEGER" />	
+		<result column="topic_hits_month" property="topicHitsMonth" jdbcType="INTEGER" />			
+
+		<result column="topic_time" property="topicTime" jdbcType="INTEGER" />			
+		<result column="topic_time_add" property="topicTimeAdd" jdbcType="INTEGER" />	
+		<result column="topic_time_hits" property="topicTimeHits" jdbcType="INTEGER" />	
+		<result column="topic_time_make" property="topicTimeMake" jdbcType="INTEGER" />		
+		
+		<result column="topic_tag" property="topicTag" jdbcType="VARCHAR" />		
+		<result column="topic_rel_vod" property="topicRelVod" jdbcType="VARCHAR" />	
+		<result column="topic_rel_art" property="topicRelArt" jdbcType="VARCHAR" />	
+		<result column="topic_content" property="topicContent" jdbcType="VARCHAR" />			
+		<result column="topic_extend" property="topicExtend" jdbcType="VARCHAR" />	
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="play_url" property="playUrl" jdbcType="VARCHAR" />
+		<result column="from_url" property="fromUrl" jdbcType="VARCHAR" />
+																	
+	</resultMap>
+	<insert id="addTopic" parameterType="com.cofc.pojo.video.Topic"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_topic(topic_name,topic_type,topic_sort,topic_hits,topic_pic,topic_content,topic_time,topic_time_add,source,play_url,from_url)
+		values(#{topicName},#{topicType},#{topicSort},#{topicHits},#{topicPic},#{topicContent},#{topicTime},#{topicTimeAdd},#{source},#{playUrl},#{fromUrl})
+	</insert>
+	<update id="updateTopic" parameterType="com.cofc.pojo.video.Topic">
+		update mac_topic
+		<trim prefix="set" suffixOverrides=",">
+			<if test="topicHits!=null">topic_hits = #{topicHits},</if>			
+			<if test="topicContent!=null and topicContent!=''">topic_content = #{topicContent},</if>
+			<if test="topicPic!=null and topicPic!=''">topic_pic = #{topicPic},</if>
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+			<if test="fromUrl!=null and fromUrl!=''">from_url = #{fromUrl},</if>
+		</trim>
+		where topic_name = #{topicName}
+	</update>
+	<delete id="delTopic" parameterType="com.cofc.pojo.video.Topic">
+		delete from mac_topic where topic_id = #{topicId}
+	</delete>
+
+	<select id="getTopicCount" resultType="int">
+		select count(*) from mac_topic 
+	</select>
+
+	<select id="getTopicByTopicId" resultMap="BaseResultMap">
+		select * from mac_topic where topic_id = #{topicId}
+	</select>	
+
+	<select id="getTopicByAssemble" resultMap="BaseResultMap">
+		select * from mac_topic where topic_name = #{topicName} and source = #{source}
+	</select>
+		 	
+	<select id="getTopicList" resultMap="BaseResultMap">
+		select * from mac_topic 
+		order by topic_time desc,topic_sort asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	
+	<select id="getTopicListByType" resultMap="BaseResultMap">       
+		select * from mac_topic
+		 where (topic_type=#{topicType} or 0=#{topicType} )
+		 and 1=topic_status
+		 order by topic_time desc,topic_sort asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>		 	
+</mapper>

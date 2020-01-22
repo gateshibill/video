@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.CarouselService">
+	<resultMap type="com.cofc.pojo.video.Carousel" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />	
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />			
+		<result column="type" property="type" jdbcType="INTEGER" />		
+		<result column="play_url" property="playUrl" jdbcType="VARCHAR" />					
+		<result column="poster_url" property="posterUrl" jdbcType="VARCHAR" />					
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />					
+		<result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />		
+	</resultMap>
+	<insert id="addCarousel" parameterType="com.cofc.pojo.video.Carousel"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_carousel(app_id,name,rank,type,play_url,poster_url,status,create_time,last_time)
+		values(#{appId},#{name},#{rank},#{type},#{playUrl},#{posterUrl},#{status},#{createTime},#{lastTime})
+	</insert>
+	<update id="updateCarousel" parameterType="com.cofc.pojo.video.Carousel">
+		update mac_carousel
+		<trim prefix="set" suffixOverrides=",">
+			<if test="posterUrl!=null">poster_url = #{posterUrl},</if>
+			<if test="status!=null">status = #{status},</if>			
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+		</trim>
+		where name = #{name}
+	</update>
+	<delete id="delCarousel" parameterType="com.cofc.pojo.video.Carousel">
+		delete from mac_carousel where id = #{id}
+	</delete>
+
+	<select id="getCarouselCount" resultType="int">
+		select count(*) from mac_carousel 
+	</select>
+
+	<select id="getCarouselById" resultMap="BaseResultMap">
+		select * from mac_carousel where id = #{id}
+	</select>	
+
+	<select id="getCarouselByAssemble" resultMap="BaseResultMap">
+		select * from mac_carousel where name = #{name}
+	</select>
+		 	
+	<select id="getCarouselList" resultMap="BaseResultMap">
+		select * from mac_carousel 
+		where (status=1)
+		order by rank asc
+	</select>	 	
+</mapper>

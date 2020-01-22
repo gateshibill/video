@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cofc.service.video.ChannelTypeService">
+	<resultMap type="com.cofc.pojo.video.ChannelType" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="SMALLINT" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />		
+		<result column="group_ip" property="groupId" jdbcType="INTEGER" />		
+		<result column="rank" property="rank" jdbcType="INTEGER" />	
+		<result column="status" property="status" jdbcType="VARCHAR" />	
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />		
+	</resultMap>
+	<insert id="addChannelType" parameterType="com.cofc.pojo.video.ChannelType"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_ctype(app_id,name,type,group_ip,rank,status,create_time)
+		values(#{appId},#{name},#{type},#{groupId},#{rank},#{status},#{createTime})
+	</insert>
+	
+	<update id="updateChannelType" parameterType="com.cofc.pojo.video.ChannelType">
+		update mac_ctype
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name!=null and name!=''">name = #{name},</if>		
+			<if test="type!=null">type = #{type},</if>
+			<if test="groupId!=null">groud_id = #{groupId},</if>
+			<if test="rank!=null">rank = #{rank},</if>
+		</trim>
+		where name = #{name}
+	</update>
+	
+	<select id="getChannelTypeList" resultMap="BaseResultMap">
+	  select * from mac_ctype where 1=status order by rank
+	</select>
+</mapper>

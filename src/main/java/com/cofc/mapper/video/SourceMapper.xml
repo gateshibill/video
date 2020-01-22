@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.SourceService">
+	<resultMap type="com.cofc.pojo.video.Source" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="local_ip" property="localIp" jdbcType="VARCHAR" />		
+		<result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />		
+		<result column="node_id" property="nodeId" jdbcType="INTEGER" />			
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="vod_id" property="vodId" jdbcType="INTEGER" />
+		<result column="vod_name" property="vodName" jdbcType="VARCHAR" />
+		<result column="sub_id" property="subId" jdbcType="VARCHAR" />
+		<result column="sub_name" property="subName" jdbcType="VARCHAR" />		
+		<result column="piece" property="piece" jdbcType="VARCHAR" />			
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<insert id="addSource" parameterType="com.cofc.pojo.video.Source"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_pnode(ip,local_ip,device_id,user_id,node_id,name,vod_id,vod_name,sub_id,sub_name,piece,create_time,last_time,status)
+		values(#{ip},#{localIp},#{deviceId},#{userId},#{nodeId},#{name},#{vodId},#{vodName},#{subId},#{subName},#{piece},#{createTime},#{lastTime},#{status})
+	</insert>
+	<update id="updateSource" parameterType="com.cofc.pojo.video.Source">
+		update mac_pnode
+		<trim prefix="set" suffixOverrides=",">
+		    <if test="nodeId!=null">node_id = #{nodeId},</if>
+			<if test="lastTime!=null">last_time = #{lastTime},</if>
+			<if test="status">status = #{status},</if>
+			</trim>
+		where id = #{id}
+	</update>
+	<delete id="delSource" parameterType="com.cofc.pojo.video.Source">
+		delete from mac_pnode where id = #{id}
+	</delete>
+
+	<select id="getSourceCount" resultType="int">
+		select count(*) from mac_pnode where 1=1
+	</select>
+	
+	<select id="getSourceList" resultMap="BaseResultMap">
+		select * from mac_pnode where 1=1
+		order by last_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	<select id="getSourceListByIpAndLocalIpAndVodIdAndPiece" resultMap="BaseResultMap">
+		select * from mac_pnode
+		where vod_id=#{vodId}
+		and ip=#{ip}
+		and local_ip=#{localIp}
+		and piece=#{piece}
+	</select>	
+	<select id="getSourceListByNoIpAndVodIdAndPiece" resultMap="BaseResultMap">
+		select * from mac_pnode
+		where vod_id=#{vodId}
+		and piece=#{piece}
+		and ip!=#{ip}
+		and status=0
+		and last_time between date_add(now(), interval - 10 minute) and now()
+		order by last_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>	
+	<select id="getSourceListByIpAndVodIdAndPiece" resultMap="BaseResultMap">
+		select * from mac_pnode
+		where vod_id=#{vodId}
+		and piece=#{piece}
+		and ip=#{ip}		
+		and status=0
+		and last_time between date_add(now(), interval - 10 minute) and now()
+		order by last_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>	
+
+</mapper>

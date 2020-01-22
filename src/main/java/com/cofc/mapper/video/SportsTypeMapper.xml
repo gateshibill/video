@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cofc.service.video.SportsTypeService">
+	<resultMap type="com.cofc.pojo.video.SportsType" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="SMALLINT" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />		
+		<result column="category" property="category" jdbcType="VARCHAR" />		
+		<result column="eng" property="eng" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />	
+		<result column="status" property="status" jdbcType="VARCHAR" />	
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />	
+		<result column="source" property="source" jdbcType="VARCHAR" />			
+	</resultMap>
+	<insert id="addSportsType" parameterType="com.cofc.pojo.video.SportsType"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_stype(app_id,name,type,category,eng,url,rank,status,num,create_time,source)
+		values(#{appId},#{name},#{type},#{category},#{eng},#{url},#{rank},#{status},#{num},#{createTime},#{source})
+	</insert>
+	
+	<update id="updateSportsType" parameterType="com.cofc.pojo.video.SportsType">
+		update mac_stype
+		<trim prefix="set" suffixOverrides=",">
+			<if test="num!=null">num = #{num},</if>
+		</trim>
+		where name = #{name}
+	</update>
+	
+	<select id="getSportsTypeList" resultMap="BaseResultMap">
+	  select * from mac_stype where 1=status
+	</select>
+</mapper>

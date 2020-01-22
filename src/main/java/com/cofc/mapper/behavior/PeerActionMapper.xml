@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.behavior.PeerActionService">
+	<resultMap type="com.cofc.pojo.behavior.PeerAction" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+		<result column="device_brand" property="deviceBrand" jdbcType="VARCHAR" />
+		<result column="client_ip" property="clientIp" jdbcType="VARCHAR" />
+		<result column="log" property="log" jdbcType="VARCHAR" />		
+		<result column="pnode_id" property="pnodeId" jdbcType="INTEGER" />
+		<result column="from_ip" property="fromIp" jdbcType="VARCHAR" />		
+		<result column="vod_name" property="vodName" jdbcType="VARCHAR" />	
+		<result column="piece" property="piece" jdbcType="VARCHAR" />	
+		<result column="size" property="size" jdbcType="INTEGER" />
+		<result column="protocol" property="protocol" jdbcType="VARCHAR" />								
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+	<insert id="insert" parameterType="com.cofc.pojo.behavior.PeerAction"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_paction(app_id,user_id,device_id,device_brand,client_ip,log,pnode_id,from_ip,vod_name,piece,size,protocol,create_time,end_time)
+		values(#{appId},#{userId},#{deviceId},#{deviceBrand},#{clientIp},#{log},#{pnodeId},#{fromIp},#{vodName},#{piece},#{size},#{piece},#{createTime},#{endTime})
+	</insert>
+
+	<delete id="deletePeerAction">
+		delete from mac_paction where id =#{id}
+	</delete>
+
+
+</mapper>

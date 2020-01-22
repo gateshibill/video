@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.ProgramService">
+	<resultMap type="com.cofc.pojo.video.Program" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />		
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />			
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="rcmd" property="rcmd" jdbcType="INTEGER" />		
+		<result column="sub_type" property="subType" jdbcType="INTEGER" />		
+		<result column="event" property="event" jdbcType="VARCHAR" />			
+		<result column="play_url" property="playUrl" jdbcType="VARCHAR" />		
+		<result column="poster_url" property="posterUrl" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />		
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />	
+		<result column="host" property="host" jdbcType="VARCHAR" />										
+		<result column="home_team" property="homeTeam" jdbcType="VARCHAR" />
+		<result column="guest_team" property="guestTeam" jdbcType="VARCHAR" />			
+		<result column="home_team_logo_url" property="homeTeamLogoUrl" jdbcType="VARCHAR" />
+		<result column="guest_team_logo_url" property="guestTeamLogoUrl" jdbcType="VARCHAR" />			
+		<result column="home_team_score" property="homeTeamScore" jdbcType="INTEGER" />
+		<result column="guest_team_score" property="guestTeamScore" jdbcType="INTEGER" />	
+		<result column="playback_url" property="playbackUrl" jdbcType="VARCHAR" />
+		<result column="bet_url" property="betUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />		
+	</resultMap>
+	<insert id="addProgram" parameterType="com.cofc.pojo.video.Program"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		mac_program(app_id,channel_id,name,type,sub_type,rcmd,event,play_url,poster_url,content,source,start_time,end_time,host,home_team,guest_team,home_team_logo_url,guest_team_logo_url,home_team_score,guest_team_score,playback_url,bet_url,create_time,last_time)
+		values(#{appId},#{channelId},#{name},#{type},#{rcmd},#{subType},#{event},#{playUrl},#{posterUrl},#{content},#{source},#{startTime},#{endTime},#{host},#{homeTeam},#{guestTeam},#{homeTeamLogoUrl},#{guestTeamLogoUrl},#{homeTeamScore},#{guestTeamScore},#{playbackUrl},#{betUrl},#{createTime},#{lastTime})
+	</insert>
+	<update id="updateProgram" parameterType="com.cofc.pojo.video.Program">
+		update mac_program
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name!=null and name!=''">name = #{name},</if>
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+			<if test="lastTime!=null and lastTime!=''">last_time = #{lastTime},</if>
+		</trim>
+		where id = #{id}
+	</update>
+	<update id="updateLeagueProgram" parameterType="com.cofc.pojo.video.Program">
+		update mac_program
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name!=null and name!=''">name = #{name},</if>
+			<if test="playUrl!=null and playUrl!=''">play_url = #{playUrl},</if>
+		</trim>
+		where name = #{name} and  event = #{event} and start_time=#{startTime}
+	</update>	
+	<update id="updateProgramScore" parameterType="com.cofc.pojo.video.Program">
+		update mac_program
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name!=null and name!=''">name = #{name},</if>	
+			<if test="homeTeamScore!=null and homeTeamScore!=''">home_team_score = #{homeTeamScore},</if>
+			<if test="homeTeamScore!=null and homeTeamScore!=''">guest_team_score = #{guestTeamScore},</if>			
+		</trim>
+		where start_time = #{startTime} 
+		      and home_team = #{homeTeam} 
+		      and guest_team = #{guestTeam} 
+	</update>	
+	<delete id="delProgram" parameterType="com.cofc.pojo.video.Program">
+		delete from mac_program where id = #{id}
+	</delete>
+	<delete id="delProgramsByEvent" parameterType="com.cofc.pojo.video.Program">
+		delete from mac_program where event = #{event}
+	</delete>	
+	<select id="getProgramCount" resultType="int">
+		select count(*) from mac_program 
+	</select>
+	
+	<select id="getProgramList" resultMap="BaseResultMap">
+		select * from mac_program 
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	<select id="getProgramByStarttimeAnd" resultMap="BaseResultMap">
+		select * from mac_program 
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>	
+	
+	<select id="getPrograms" resultMap="BaseResultMap">
+		select a.name,
+		a.start_time,
+		a.end_time,
+		a.host,
+		a.home_team,
+		a.guest_team,
+		a.home_team_score,
+		a.guest_team_score,
+		a.playback_url,
+		a.bet_url,
+		b.name as channelName,
+		b.play_url as playUrl
+		from mac_program a left join mac_channel b on a.channel_id=b.id
+        where a.type=#{type} or #{type}=0
+		order by a.create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>		
+	<select id="getProgramsByDay" resultMap="BaseResultMap">
+		select a.name,
+		a.start_time,
+		a.end_time,
+		a.host,
+		a.home_team,
+		a.guest_team,
+		a.home_team_score,
+		a.guest_team_score,
+		a.playback_url,
+		a.bet_url,
+		a.event,
+		b.name as channelName,
+		b.play_url as playUrl
+		from mac_program a left join mac_channel b on a.channel_id=b.id
+        where (to_days(start_time)-to_days(now())=#{day})
+        and (a.event is null or a.event="")
+		order by a.start_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>	
+	<select id="getLeaguePrograms" resultMap="BaseResultMap">
+		select * from mac_program 
+        where ( (to_days(start_time)-to_days(now())) &lt;= #{day} and (to_days(now())-to_days(start_time)) &lt;= #{day})
+             and event=#{event}
+		order by start_time asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>	
+	<select id="getLeagueProgram" parameterType="com.cofc.pojo.video.Program" resultMap="BaseResultMap">
+		select  * from mac_program 
+		  where name = #{name} and  event = #{event} and start_time=#{startTime}
+	 </select>	  	
+	<select id="getProgramsByEvent" resultMap="BaseResultMap">
+		select a.name,
+		a.start_time,
+		a.end_time,
+		a.host,
+		a.home_team,
+		a.guest_team,
+		a.home_team_score,
+		a.guest_team_score,
+		a.home_team_logo_url,
+		a.guest_team_logo_url,		
+		a.playback_url,
+		a.bet_url,
+		a.event,
+		b.name as channelName,
+		b.play_url as playUrl
+		from mac_program a left join mac_channel b on a.channel_id=b.id
+        where a.event=#{event}
+		order by a.start_time asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>		
+	<select id="getCurrentPrograms" resultMap="BaseResultMap">
+		select a.name,
+		a.start_time,
+		a.end_time,
+		a.host,
+		a.home_team,
+		a.guest_team,
+		a.home_team_score,
+		a.guest_team_score,
+		a.home_team_logo_url,
+		a.guest_team_logo_url,		
+		a.playback_url,
+		a.bet_url,
+		a.event,
+		b.name as channelName,
+		b.play_url as playUrl
+		from mac_program a left join mac_channel b on a.channel_id=b.id
+        where (now() Between a.start_time and a.end_time)
+        and a.source="tvmao"
+		order by a.id asc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>	
+	<select id="getHotPrograms" resultMap="BaseResultMap">
+		select a.name,
+		a.start_time,
+		a.end_time,
+		a.host,
+		a.home_team,
+		a.guest_team,
+		a.home_team_score,
+		a.guest_team_score,
+		a.home_team_logo_url,
+		a.guest_team_logo_url,		
+		a.playback_url,
+		a.bet_url,
+		a.event,
+		b.name as channelName,
+		b.play_url as playUrl
+		from mac_program a left join mac_channel b on a.channel_id=b.id
+        where a.event="worldcup" and 
+             (now() Between a.start_time and a.end_time)
+		order by a.start_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	 </select>	 	
+	<select id="getProgramListByAssemble" resultMap="BaseResultMap">
+		select * from mac_program where 1=1
+		 <if test="name != null and name!=''">
+			and name=#{name}
+		 </if>
+		 <if test="channelId != null">
+			and channelId=#{channelId}
+		 </if>			 	 
+		 order by start_time desc
+		 <if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>	
+	</select>   
+	<select id="getProgramCountByAssemble"  resultType="int">
+		select count(*) from mac_program where 1=1
+		 <if test="name != null and name!=''">
+			and name=#{name}
+		 </if>
+		 <if test="channelId != null">
+			and channelId=#{channelId}
+		 </if>		 	 	
+	</select> 	 
+	    
+</mapper>
