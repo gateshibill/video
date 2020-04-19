@@ -87,93 +87,9 @@ public class ClientController extends BaseUtil {
 	// 终端：
 
 	// 1.开机连接,登陆，验证
-	@RequestMapping("/startup")
-	public void startup(HttpServletRequest request, HttpServletResponse response, Source fgb) throws IOException {
-		// fgb.setIp(getIpAddr(request));
-//		log.info(fgb.getId() + "(" + fgb.getName() + ")" + "上报:" + fgb.getType() + "|"
-//				+ fgb.getContent() + "|" + fgb.getTime());
-//		
-//		fgb.setCreateTime(new Date());
-//		faceGameBehaviorService.addFaceGameBehavior(fgb);
-//		output(response, JsonUtil.buildSuccessJson("0", "succes"));
-	}
+	@RequestMapping("/charge")
+	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId) throws IOException {
 
-	// 2.获得portal门户和栏目信息
-	@RequestMapping("/getColumnList")
-	public void getColumnList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		List<Column> columnList = columnService.getColumnList(0);
-		output(response, JsonUtil.buildCustomJson("0", "succes", columnList));
-	}
-
-	// 2.1 音乐栏目
-	@RequestMapping("/getSongColumnList")
-	public void getSongSColumnList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		List<Column> columnList = columnService.getColumnList(1);
-		output(response, JsonUtil.buildCustomJson("0", "succes", columnList));
-	}
-
-	// 2.2 获得电影
-	@RequestMapping("/getMovies")
-	public void getMovies(HttpServletRequest request, HttpServletResponse response, Integer columnId, Integer page,
-			Integer limit) throws IOException {
-		if (page == null) {
-			page = 0;
-		}
-		if (limit == null) {
-			limit = 10;
-		}
-		List<Asset> assetList = assetService.getAssetListByColumnId(columnId, page, limit);
-		output(response, JsonUtil.buildCustomJson("0", "succes", assetList));
-	}
-
-	// 2.3 获得歌曲，
-	@RequestMapping("/getSongs")
-	public void getSongs(HttpServletRequest request, HttpServletResponse response, Integer columnId)
-			throws IOException {
-		List<Asset> assetList = assetService.getAssetListByColumnId(columnId, 1, 10);
-		output(response, JsonUtil.buildCustomJson("0", "succes", assetList));
-	}
-
-	// 4.校验信息有效性,被VS调用
-	@RequestMapping("/authToken")
-	public void authToken(HttpServletRequest request, HttpServletResponse response, Source fg) throws IOException {
-
-		output(response, JsonUtil.bulidObjectJson(fg));
-	}
-
-	// 5.终端心跳，人机交互安全验证，更新有效期
-	@RequestMapping("/heartbeat")
-	public void heartbeat(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// output(response, JsonUtil.bulidObjectJson(fg));
-	}
-
-	// 6.账号生成，通过设备信息生成
-	@RequestMapping("/addAccount")
-	public void addAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// output(response, JsonUtil.bulidObjectJson(fg));
-	}
-
-	// 7.账号增删改查
-	@RequestMapping("/getAccount")
-	public void getAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// output(response, JsonUtil.bulidObjectJson(fg));
-	}
-
-	// 8.观看历史
-	@RequestMapping("/getHistoryMoives")
-	public void getHistoryMoives(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// output(response, JsonUtil.bulidObjectJson(fg));
-	}
-
-	// 8.收藏
-	@RequestMapping("/getFavoriteMoives")
-	public void getFavoriteMoives(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// output(response, JsonUtil.bulidObjectJson(fg));
 	}
 
 	// 9.用户登录
