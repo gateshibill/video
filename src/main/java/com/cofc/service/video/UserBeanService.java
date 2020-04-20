@@ -17,7 +17,7 @@ public interface UserBeanService {
     public int insertSelective(UserBean record);
     public UserBean getUserByUserPhone(@Param("userPhone")String userPhone);
     public UserBean getUserByUserId(@Param("userId")Integer userId);
-    
+    public UserBean getUserByDeviceId(@Param("deviceId")String deviceId);
     public UserBean selectByPrimaryKey(Integer userId);
 
     public int updateByPrimaryKeySelective(UserBean record);

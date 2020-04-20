@@ -8,7 +8,9 @@
 		<result column="group_id" jdbcType="SMALLINT"
 			property="groupId" />
 		<result column="vip_expire" jdbcType="TIMESTAMP" 
-			property="vipExpire" />			
+			property="vipExpire" />		
+		<result column="device_id" jdbcType="VARCHAR" 
+			property="deviceId" />						
 		<result column="user_name" jdbcType="VARCHAR"
 			property="userName" />
 		<result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
@@ -96,7 +98,7 @@
 		user_reg_ip, user_login_time, user_login_ip,
 		user_last_login_time, user_last_login_ip, user_login_num,
 		user_extend, user_random, user_end_time,
-		user_pid, user_pid_2, user_pid_3
+		user_pid, user_pid_2, user_pid_3,device_id
 		)
 		values (#{userId,jdbcType=INTEGER},#{appId,jdbcType=SMALLINT}, #{groupId,jdbcType=SMALLINT},
 		#{userName,jdbcType=VARCHAR},
@@ -115,7 +117,7 @@
 		#{userLoginNum,jdbcType=SMALLINT},
 		#{userExtend,jdbcType=SMALLINT}, #{userRandom,jdbcType=VARCHAR}, #{userEndTime,jdbcType=INTEGER},
 		#{userPid,jdbcType=INTEGER}, #{userPid2,jdbcType=INTEGER},
-		#{userPid3,jdbcType=INTEGER}
+		#{userPid3,jdbcType=INTEGER},#{deviceID,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective"
@@ -215,6 +217,9 @@
 			<if test="userPid3 != null">
 				user_pid_3,
 			</if>
+			<if test="deviceId != null">
+				device_id,
+			</if>			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="userId != null">
@@ -310,6 +315,9 @@
 			<if test="userPid3 != null">
 				#{userPid3,jdbcType=INTEGER},
 			</if>
+			<if test="userPid3 != null">
+				#{deviceId,jdbcType=VARCHAR},
+			</if>			
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -405,7 +413,10 @@
 			</if>
 			<if test="userPid3 != null">
 				user_pid_3 = #{userPid3,jdbcType=INTEGER},
-			</if>		
+			</if>	
+			<if test="deviceId != null">
+				device_id = #{deviceId,jdbcType=VARCHAR},
+			</if>				
 		</set>
 		where user_id = #{userId,jdbcType=INTEGER}
 	</update>
@@ -452,6 +463,10 @@
 		select * from mac_user
 		where user_id = #{userId}
 	</select>	
+	<select id="getUserByDeviceId" resultMap="BaseResultMap">
+		select * from mac_user
+		where device_id = #{deviceId}
+	</select>		
 	<select id="getUsers" resultMap="BaseResultMap">
 		select * from mac_user where 1=1
 		order by user_reg_time desc

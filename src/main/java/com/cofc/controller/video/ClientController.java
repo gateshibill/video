@@ -90,82 +90,86 @@ public class ClientController extends BaseUtil {
 
 	public static Logger log = Logger.getLogger("ClientController");
 
-	//充值
+	// 充值
 	@RequestMapping("/charge")
-	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId,Integer userId) throws IOException {
-		log.info("charge() " + cardId+"/"+userId);
-		if (null == cardId||null==userId) {
+	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId, Integer userId)
+			throws IOException {
+		log.info("charge() " + cardId + "/" + userId);
+		if (null == cardId || null == userId) {
 			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
 			return;
 		}
 		try {
-		//1.卡是否存在；
-		ChargeCard chargeCard=chargeCardService.getChargeCardByCardId(cardId);
-		if(null==chargeCard){
-			output(response, JsonUtil.buildFalseJson("2", "卡不存在"));
-			return;
-		}else if (0!=chargeCard.getUsed()){
-			output(response, JsonUtil.buildFalseJson("3", "卡已经使用过"));
-			return;
-		}else if (0!=chargeCard.getValidate()){
-			output(response, JsonUtil.buildFalseJson("4", "卡"));
-			return;
-		}
-		//获取用户当前到期时间，需要在当前时间基础上增加
-		UserBean user =userService.getUserByUserId(userId);
-		Date expire= user.getVipExpire();
-		if(null==expire||expire.before(new Date()));
-		{
-			expire= new Date();
-		}
-		int type= chargeCard.getType();
-		
-		Calendar  calendar  =  new  GregorianCalendar(); 
-		calendar.setTime(expire); 
-		switch(type){
-		case 0:
-			calendar.add(Calendar.DATE, 3);		
-		break;
-		case 1://月卡
-			calendar.add(Calendar.DAY_OF_MONTH, 1);	
-		break;		
-		case 2://季卡
-			calendar.add(Calendar.DAY_OF_MONTH, 3);	
-		break;	
-		case 3://年卡
-			calendar.add(Calendar.YEAR, 1);	
-		break;	
-		default:
-			System.out.println("card type is unknown:"+type);
-		break;
-		}
-		expire =calendar.getTime();  
-		chargeCard.setExpire(expire);
-		chargeCard.setUsedTime(new Date());
-		chargeCard.setUsed(1);
-		chargeCardService.updateChargeCard(chargeCard);
-		
-		//更新用戶到期時間
-		user.setVipExpire(expire);
-		userService.updateByPrimaryKeySelective(user);
-		
-		output(response, JsonUtil.buildFalseJson("200", "success"));
+			// 1.卡是否存在；
+			ChargeCard chargeCard = chargeCardService.getChargeCardByCardId(cardId);
+			if (null == chargeCard) {
+				output(response, JsonUtil.buildFalseJson("2", "卡不存在"));
+				return;
+			} else if (0 != chargeCard.getUsed()) {
+				output(response, JsonUtil.buildFalseJson("3", "卡已经使用过"));
+				return;
+			} else if (0 != chargeCard.getValidate()) {
+				output(response, JsonUtil.buildFalseJson("4", "卡"));
+				return;
+			}
+			// 获取用户当前到期时间，需要在当前时间基础上增加
+			UserBean user = userService.getUserByUserId(userId);
+			Date expire = user.getVipExpire();
+			if (null == expire || expire.before(new Date()))
+				;
+			{
+				expire = new Date();
+			}
+			int type = chargeCard.getType();
+
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(expire);
+			switch (type) {
+			case 0:
+				calendar.add(Calendar.DATE, 3);
+				break;
+			case 1:// 月卡
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				break;
+			case 2:// 季卡
+				calendar.add(Calendar.DAY_OF_MONTH, 3);
+				break;
+			case 3:// 年卡
+				calendar.add(Calendar.YEAR, 1);
+				break;
+			default:
+				System.out.println("card type is unknown:" + type);
+				break;
+			}
+			expire = calendar.getTime();
+			chargeCard.setExpire(expire);
+			chargeCard.setUsedTime(new Date());
+			chargeCard.setUsed(1);
+			chargeCardService.updateChargeCard(chargeCard);
+
+			// 更新用戶到期時間
+			user.setVipExpire(expire);
+			userService.updateByPrimaryKeySelective(user);
+
+			output(response, JsonUtil.buildFalseJson("200", "success"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
 		}
 	}
-    //获取用户正在使用的充值卡
+
+	// 获取用户正在使用的充值卡
 	@RequestMapping("/getUsingChargeCard")
-	public void getUsingChargeCard(HttpServletRequest request, HttpServletResponse response,Integer userId) throws IOException {
-		log.info("getUsingChargeCard() " +userId);
-		if (null==userId) {
+	public void getUsingChargeCard(HttpServletRequest request, HttpServletResponse response, Integer userId)
+			throws IOException {
+		log.info("getUsingChargeCard() " + userId);
+		if (null == userId) {
 			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
 			return;
 		}
-		try{
-		ChargeCard chargeCard=chargeCardService.getChargeCardByUserId(userId);
-		output(response, JsonUtil.buildSuccessJson("0", "success", chargeCard));
+		try {
+			ChargeCard chargeCard = chargeCardService.getChargeCardByUserId(userId);
+			output(response, JsonUtil.buildSuccessJson("0", "success", chargeCard));
 		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
@@ -181,8 +185,20 @@ public class ClientController extends BaseUtil {
 		try {
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
 			UserBean ub = gson.fromJson(message, UserBean.class);
-			ub.setUserRandom(new Date().toString());
-			UserBean user = userService.login(ub.getUserPhone(), ub.getUserEmail(), MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
+			// ub.setUserRandom(new Date().toString());
+			if (null == ub) {
+				output(response, JsonUtil.buildFalseJson("1", "传入用户为空"));
+				return;
+			}
+			UserBean user = null;
+			if (null != ub.getUserPhone() || !ub.getUserPhone().isEmpty()) {
+				user = userService.login(ub.getUserPhone(), ub.getUserEmail(),
+						MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
+
+			} else if (null != ub.getUserId()) {
+				user = userService.getUserByUserId(ub.getUserId());
+			}
+
 			if (null != user) {
 				user.setUserRandom(makeToken());
 				LoginHandlerIntercepter.putUserToken(user.getUserId() + "", user.getUserRandom());
@@ -190,16 +206,14 @@ public class ClientController extends BaseUtil {
 			} else {
 				output(response, JsonUtil.buildFalseJson("201", "user is not exist or password error!"));
 			}
-		} catch (
 
-		Exception e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
 		}
 	}
 
-	// 10.用户注册
+	// 用户注册
 	@RequestMapping("/register")
 	public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		InputStream is = request.getInputStream();
@@ -216,6 +230,35 @@ public class ClientController extends BaseUtil {
 			ub.setUserPwd(MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
 			userService.insert(ub);
 			output(response, JsonUtil.objectToJson("200", ub));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			output(response, JsonUtil.buildSuccessJson("405", "error"));
+		}
+	}
+
+	// 访客
+	@RequestMapping("/guest")
+	public void guest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		InputStream is = request.getInputStream();
+		String message = IOUtils.toString(is, "UTF-8");
+		System.out.println("message:" + message);
+		try {
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
+			UserBean ub = gson.fromJson(message, UserBean.class);
+			if (null == ub) {
+				output(response, JsonUtil.buildFalseJson("1", "传入用户为空"));
+				return;
+			}
+			UserBean user = userService.getUserByDeviceId(ub.getDeviceId());
+			if (null != user) {
+				output(response, JsonUtil.objectToJson("200", user));
+				return;
+			} else {
+				userService.insert(ub);// 通过数据库生成用户ID
+				output(response, JsonUtil.objectToJson("200", ub));
+			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -7,6 +7,7 @@ public class UserBean {
     private Integer appId=0;
     private Short groupId=0;
     private Date vipExpire;
+    private String deviceId;
     private String userName="";
 
     private String userPwd="";
@@ -317,6 +318,14 @@ public class UserBean {
 
 	public void setVipExpire(Date vipExpire) {
 		this.vipExpire = vipExpire;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
     
 }
