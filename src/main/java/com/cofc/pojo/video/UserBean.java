@@ -1,10 +1,12 @@
 package com.cofc.pojo.video;
 
+import java.util.Date;
+
 public class UserBean {
     private Integer userId;
     private Integer appId=0;
     private Short groupId=0;
-
+    private Date vipExpire;
     private String userName="";
 
     private String userPwd="";
@@ -308,4 +310,13 @@ public class UserBean {
     public void setUserPid3(Integer userPid3) {
         this.userPid3 = userPid3;
     }
+
+	public Date getVipExpire() {
+		return vipExpire;
+	}
+
+	public void setVipExpire(Date vipExpire) {
+		this.vipExpire = vipExpire;
+	}
+    
 }

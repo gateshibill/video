@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cofc.service.video.ChargeCardService">
+	<resultMap type="com.cofc.pojo.video.ChargeCard" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="card_id" property="cardId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />		
+		<result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="DOUBLE" />	
+		<result column="validate" property="validate" jdbcType="INTEGER" />	
+		<result column="used" property="used" jdbcType="INTEGER" />			
+		<result column="create_time" property="createTime"
+			jdbcType="TIMESTAMP" />
+		<result column="used_time" property="usedTime"
+			jdbcType="TIMESTAMP" />
+		<result column="expire" property="expire"
+			jdbcType="TIMESTAMP" />
+											
+	</resultMap>
+	<insert id="addChargeCard" parameterType="com.cofc.pojo.video.ChargeCard"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		ex_charge_card(card_id,user_id,type,name,price,validate,used,create_time,used_time,expire)
+		values(#{cardId},#{userId},#{type},#{name},#{price},#{validate},#{used},#{createTime},#{usedTime},#{expire})
+	</insert>
+	<update id="updateChargeCard" parameterType="com.cofc.pojo.video.ChargeCard">
+		update ex_charge_card
+		<trim prefix="set" suffixOverrides=",">
+		    <if test="price!=null">price = #{price},</if>
+		    <if test="validate!=null">validate = #{validate},</if>
+		    <if test="used!=null">used = #{used},</if>
+			<if test="createTime!=null and createTime!=''">create_time = #{createTime},</if>
+			<if test="usedTime!=null and usedTime!=''">used_time = #{usedTime},</if>
+			<if test="expire!=null and expire!=''">expire = #{expire},</if>			
+		</trim>
+		where id = #{id}
+	</update>
+	<delete id="delChargeCard" parameterType="com.cofc.pojo.video.ChargeCard">
+		delete from ex_charge_card where id = #{id}
+	</delete>
+	
+	<select id="getChargeCardByCardId" resultMap="BaseResultMap">
+	select * from
+		ex_charge_card a left where card_id =#{cardId}
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>
+	<select id="getChargeCardByUserId" resultMap="BaseResultMap">
+	select * from ex_charge_card a left where user_id =#{userId}
+		order by create_time desc
+		<if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>
+	</select>	
+</mapper>

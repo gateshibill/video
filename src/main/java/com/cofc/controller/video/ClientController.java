@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +30,7 @@ import com.cofc.pojo.behavior.PeerAction;
 //import com.cofc.pojo.aida.FaceGameBehavior;
 import com.cofc.pojo.video.Asset;
 import com.cofc.pojo.video.Channel;
+import com.cofc.pojo.video.ChargeCard;
 import com.cofc.pojo.video.Column;
 import com.cofc.pojo.video.Program;
 import com.cofc.pojo.video.Source;
@@ -40,6 +43,7 @@ import com.cofc.service.behavior.ClientLogService;
 import com.cofc.service.behavior.PeerActionService;
 import com.cofc.service.video.AssetService;
 import com.cofc.service.video.ChannelService;
+import com.cofc.service.video.ChargeCardService;
 import com.cofc.service.video.ColumnService;
 import com.cofc.service.video.ProgramService;
 import com.cofc.service.video.UserBeanService;
@@ -81,18 +85,94 @@ public class ClientController extends BaseUtil {
 	private PeerActionService peerActionService;
 	@Resource
 	private ClientLogService clientLogService;
+	@Resource
+	private ChargeCardService chargeCardService;
 
 	public static Logger log = Logger.getLogger("ClientController");
 
-	// 终端：
-
-	// 1.开机连接,登陆，验证
+	//充值
 	@RequestMapping("/charge")
-	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId) throws IOException {
-
+	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId,Integer userId) throws IOException {
+		log.info("charge() " + cardId+"/"+userId);
+		if (null == cardId||null==userId) {
+			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
+			return;
+		}
+		try {
+		//1.卡是否存在；
+		ChargeCard chargeCard=chargeCardService.getChargeCardByCardId(cardId);
+		if(null==chargeCard){
+			output(response, JsonUtil.buildFalseJson("2", "卡不存在"));
+			return;
+		}else if (0!=chargeCard.getUsed()){
+			output(response, JsonUtil.buildFalseJson("3", "卡已经使用过"));
+			return;
+		}else if (0!=chargeCard.getValidate()){
+			output(response, JsonUtil.buildFalseJson("4", "卡"));
+			return;
+		}
+		//获取用户当前到期时间，需要在当前时间基础上增加
+		UserBean user =userService.getUserByUserId(userId);
+		Date expire= user.getVipExpire();
+		if(null==expire||expire.before(new Date()));
+		{
+			expire= new Date();
+		}
+		int type= chargeCard.getType();
+		
+		Calendar  calendar  =  new  GregorianCalendar(); 
+		calendar.setTime(expire); 
+		switch(type){
+		case 0:
+			calendar.add(Calendar.DATE, 3);		
+		break;
+		case 1://月卡
+			calendar.add(Calendar.DAY_OF_MONTH, 1);	
+		break;		
+		case 2://季卡
+			calendar.add(Calendar.DAY_OF_MONTH, 3);	
+		break;	
+		case 3://年卡
+			calendar.add(Calendar.YEAR, 1);	
+		break;	
+		default:
+			System.out.println("card type is unknown:"+type);
+		break;
+		}
+		expire =calendar.getTime();  
+		chargeCard.setExpire(expire);
+		chargeCard.setUsedTime(new Date());
+		chargeCard.setUsed(1);
+		chargeCardService.updateChargeCard(chargeCard);
+		
+		//更新用戶到期時間
+		user.setVipExpire(expire);
+		userService.updateByPrimaryKeySelective(user);
+		
+		output(response, JsonUtil.buildFalseJson("200", "success"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			output(response, JsonUtil.buildSuccessJson("405", "error"));
+		}
+	}
+    //获取用户正在使用的充值卡
+	@RequestMapping("/getUsingChargeCard")
+	public void getUsingChargeCard(HttpServletRequest request, HttpServletResponse response,Integer userId) throws IOException {
+		log.info("getUsingChargeCard() " +userId);
+		if (null==userId) {
+			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
+			return;
+		}
+		try{
+		ChargeCard chargeCard=chargeCardService.getChargeCardByUserId(userId);
+		output(response, JsonUtil.buildSuccessJson("0", "success", chargeCard));
+		} catch (Exception e) {
+			e.printStackTrace();
+			output(response, JsonUtil.buildSuccessJson("405", "error"));
+		}
 	}
 
-	// 9.用户登录
+	// 用户登录
 	@RequestMapping("/login")
 	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		InputStream is = request.getInputStream();
