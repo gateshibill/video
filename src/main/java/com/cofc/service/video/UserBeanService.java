@@ -9,7 +9,7 @@ import com.cofc.pojo.video.UserBean;
 public interface UserBeanService {
 	public int deleteByPrimaryKey(Integer userId);
 
-	public void insert(UserBean record);
+	public int insert(UserBean record);
     
     public List<UserBean>  getUserlist(@Param("page")Integer page,@Param("limit")Integer limit);
     public List<UserBean>  getUsers(@Param("page")Integer page,@Param("limit")Integer limit);

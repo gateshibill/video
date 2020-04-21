@@ -151,7 +151,7 @@ public class ClientController extends BaseUtil {
 			user.setVipExpire(expire);
 			userService.updateByPrimaryKeySelective(user);
 
-			output(response, JsonUtil.buildFalseJson("200", "success"));
+			output(response, JsonUtil.buildFalseJson("0", "success"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
@@ -202,7 +202,7 @@ public class ClientController extends BaseUtil {
 			if (null != user) {
 				user.setUserRandom(makeToken());
 				LoginHandlerIntercepter.putUserToken(user.getUserId() + "", user.getUserRandom());
-				output(response, JsonUtil.objectToJson("200", user));
+				output(response, JsonUtil.objectToJson("0", user));
 			} else {
 				output(response, JsonUtil.buildFalseJson("201", "user is not exist or password error!"));
 			}
@@ -229,7 +229,7 @@ public class ClientController extends BaseUtil {
 			}
 			ub.setUserPwd(MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
 			userService.insert(ub);
-			output(response, JsonUtil.objectToJson("200", ub));
+			output(response, JsonUtil.objectToJson("0", ub));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,11 +252,14 @@ public class ClientController extends BaseUtil {
 			}
 			UserBean user = userService.getUserByDeviceId(ub.getDeviceId());
 			if (null != user) {
-				output(response, JsonUtil.objectToJson("200", user));
+				output(response, JsonUtil.objectToJson("0", user));
 				return;
 			} else {
 				userService.insert(ub);// 通过数据库生成用户ID
-				output(response, JsonUtil.objectToJson("200", ub));
+				System.out.println("user.userId:" + ub.getUserId());
+				//System.out.println("userId:" + userId);
+				//ub.setUserId(userId);
+				output(response, JsonUtil.objectToJson("0", ub));
 			}
 
 		} catch (Exception e) {
@@ -277,7 +280,7 @@ public class ClientController extends BaseUtil {
 			ClientAction clientAction = gson.fromJson(message, ClientAction.class);
 			clientAction.setDeviceIp(CommonUtil.getIpAddr(request));
 			clientActionService.insert(clientAction);
-			output(response, JsonUtil.buildFalseJson("200", "success"));
+			output(response, JsonUtil.buildFalseJson("0", "success"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,7 +299,7 @@ public class ClientController extends BaseUtil {
 			PeerAction peerAction = gson.fromJson(message, PeerAction.class);
 			peerAction.setClientIp(CommonUtil.getIpAddr(request));
 			peerActionService.insert(peerAction);
-			output(response, JsonUtil.buildFalseJson("200", "success"));
+			output(response, JsonUtil.buildFalseJson("0", "success"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -315,7 +318,7 @@ public class ClientController extends BaseUtil {
 			ClientLog clientLog = gson.fromJson(message, ClientLog.class);
 			clientLog.setClientIp(CommonUtil.getIpAddr(request));
 			clientLogService.insert(clientLog);
-			output(response, JsonUtil.buildFalseJson("200", "success"));
+			output(response, JsonUtil.buildFalseJson("0", "success"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

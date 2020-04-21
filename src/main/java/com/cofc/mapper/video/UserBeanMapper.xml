@@ -88,7 +88,8 @@
 		delete from mac_user
 		where user_id = #{userId,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.cofc.pojo.video.UserBean">
+	<insert id="insert" parameterType="com.cofc.pojo.video.UserBean"
+	useGeneratedKeys="true" keyProperty="userId">
 		insert into mac_user (user_id, app_id,group_id, user_name,
 		user_pwd, user_nick_name, user_qq,
 		user_email, user_phone, user_status,
@@ -117,11 +118,12 @@
 		#{userLoginNum,jdbcType=SMALLINT},
 		#{userExtend,jdbcType=SMALLINT}, #{userRandom,jdbcType=VARCHAR}, #{userEndTime,jdbcType=INTEGER},
 		#{userPid,jdbcType=INTEGER}, #{userPid2,jdbcType=INTEGER},
-		#{userPid3,jdbcType=INTEGER},#{deviceID,jdbcType=VARCHAR}
+		#{userPid3,jdbcType=INTEGER},#{deviceId,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective"
-		parameterType="com.cofc.pojo.video.UserBean">
+		parameterType="com.cofc.pojo.video.UserBean"
+		useGeneratedKeys="true" keyProperty="user_id">
 		insert into mac_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="userId != null">
@@ -321,7 +323,8 @@
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
-		parameterType="com.cofc.pojo.video.UserBean">
+		parameterType="com.cofc.pojo.video.UserBean"
+		useGeneratedKeys="true" keyProperty="user_id">
 		update mac_user
 		<set>
 			<if test="vipExpire != null">
