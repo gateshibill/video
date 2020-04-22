@@ -144,7 +144,7 @@ public class ClientController extends BaseUtil {
 			chargeCard.setExpire(expire);
 			chargeCard.setUsedTime(new Date());
 			chargeCard.setUsed(1);
-			chargeCard.setUsed(userId);
+			chargeCard.setUserId(userId);
 			chargeCardService.updateChargeCard(chargeCard);
 
 			// 更新用戶到期時間
