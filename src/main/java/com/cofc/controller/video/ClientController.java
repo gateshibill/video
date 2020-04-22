@@ -109,14 +109,13 @@ public class ClientController extends BaseUtil {
 				output(response, JsonUtil.buildFalseJson("3", "卡已经使用过"));
 				return;
 			} else if (0 != chargeCard.getValidate()) {
-				output(response, JsonUtil.buildFalseJson("4", "卡"));
+				output(response, JsonUtil.buildFalseJson("4", "卡无效"));
 				return;
 			}
 			// 获取用户当前到期时间，需要在当前时间基础上增加
 			UserBean user = userService.getUserByUserId(userId);
 			Date expire = user.getVipExpire();
 			if (null == expire || expire.before(new Date()))
-				;
 			{
 				expire = new Date();
 			}
@@ -129,10 +128,10 @@ public class ClientController extends BaseUtil {
 				calendar.add(Calendar.DATE, 3);
 				break;
 			case 1:// 月卡
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				calendar.add(Calendar.MONTH, 1);
 				break;
 			case 2:// 季卡
-				calendar.add(Calendar.DAY_OF_MONTH, 3);
+				calendar.add(Calendar.MONTH, 3);
 				break;
 			case 3:// 年卡
 				calendar.add(Calendar.YEAR, 1);
@@ -145,6 +144,7 @@ public class ClientController extends BaseUtil {
 			chargeCard.setExpire(expire);
 			chargeCard.setUsedTime(new Date());
 			chargeCard.setUsed(1);
+			chargeCard.setUsed(userId);
 			chargeCardService.updateChargeCard(chargeCard);
 
 			// 更新用戶到期時間
@@ -195,7 +195,7 @@ public class ClientController extends BaseUtil {
 				user = userService.login(ub.getUserPhone(), ub.getUserEmail(),
 						MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
 
-			} else if (null != ub.getUserId()) {
+			} else if (null != ub.getUserId()) {//没有绑定手机用户，没有密码
 				user = userService.getUserByUserId(ub.getUserId());
 			}
 
