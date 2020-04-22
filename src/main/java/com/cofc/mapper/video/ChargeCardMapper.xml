@@ -27,6 +27,7 @@
 	<update id="updateChargeCard" parameterType="com.cofc.pojo.video.ChargeCard">
 		update ex_charge_card
 		<trim prefix="set" suffixOverrides=",">
+		    <if test="userId!=null">user_id = #{userId},</if>
 		    <if test="price!=null">price = #{price},</if>
 		    <if test="validate!=null">validate = #{validate},</if>
 		    <if test="used!=null">used = #{used},</if>

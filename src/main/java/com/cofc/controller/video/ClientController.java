@@ -151,7 +151,7 @@ public class ClientController extends BaseUtil {
 			user.setVipExpire(expire);
 			userService.updateByPrimaryKeySelective(user);
 
-			output(response, JsonUtil.buildFalseJson("0", "success"));
+			output(response, JsonUtil.buildSuccessJson("0", "充值成功", user));
 		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
@@ -191,7 +191,7 @@ public class ClientController extends BaseUtil {
 				return;
 			}
 			UserBean user = null;
-			if (null != ub.getUserPhone() || !ub.getUserPhone().isEmpty()) {
+			if (null != ub.getUserPhone() && !ub.getUserPhone().isEmpty()) {
 				user = userService.login(ub.getUserPhone(), ub.getUserEmail(),
 						MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
 

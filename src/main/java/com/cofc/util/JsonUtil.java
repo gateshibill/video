@@ -92,7 +92,7 @@ public class JsonUtil {
 	}
 	public static String buildSuccessJson(String code, String message,Object obj) {
 		String str = JsonUtil.gson.toJson(obj);
-		return String.format("{\"code\":d%, \"msg\": %s, \"object\": %s}", code,message,str);
+		return String.format("{\"code\":%s, \"msg\": %s, \"object\": %s}", code,message,str);
 	}	
 
 	public static String buildSuccessJsonCount(String code, int count) {
