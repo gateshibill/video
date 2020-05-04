@@ -80,9 +80,11 @@
 	</blockquote>
 	<table class="layui-table" id="descovery" lay-filter="descovery"></table>
 	<script type="text/html" id="toolBar">
+    <a class="layui-btn layui-btn layui-btn-mini" lay-event="player" >播放</a>
 	<a class="layui-btn layui-btn layui-btn-mini" lay-event="lookUser" >查看</a>
    <%-- <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="setAgent" >设置代理</a> --%>
   	<a class="layui-btn layui-btn-danger layui-btn-mini" onclick="deleteUser({{d.userId}})">删除</a>
+
 
 </script>
 	<!-- 上架状态模板 -->
@@ -339,6 +341,22 @@
 							} 
 						}
 					});
+				} else if (obj.event === 'player') {
+					//点击某个按钮 => 弹出层 => 播放视频
+				    //$('#player').click(function () {
+				        playUrl = data.playUrl;  //获取到播放的url
+				    	//layer.msg('播放串:'+playUrl);
+				        var loadstr = '<video width="100%" height="100%"  controls="controls" autobuffer="autobuffer"  autoplay="autoplay" loop="loop">' +
+				                '<source src='+playUrl+' type="video/mp4"></source></video>';
+				        layer.open({
+				            type: 1,
+				            title: false,
+				            area: ['730px', '500px'],
+				            shade: [0.8, 'rgb(14, 16, 22)'],
+				            skin: 'demo-class',
+				            content: loadstr
+				        });
+				    //});
 				} else {
 					$.ajax({
 						data : 'json',
@@ -428,6 +446,25 @@
 				});
 			})
 		}
+		
+		//删除用户
+		function play(){
+			//layer.msg('play：'+vUrl);
+			//点击某个按钮 => 弹出层 => 播放视频
+		    //$('#player').click(function () {
+		       // vUrl = $(this).attr('src');  //获取到播放的url
+		        var loadstr = '<video width="100%" height="100%"  controls="controls" autobuffer="autobuffer"  autoplay="autoplay" loop="loop">' +
+		                '<source src='+vUrl+' type="video/mp4"></source></video>';
+		        layer.open({
+		            type: 1,
+		            title: false,
+		            area: ['730px', '500px'],
+		            shade: [0.8, 'rgb(14, 16, 22)'],
+		            skin: 'demo-class',
+		            content: loadstr
+		        });
+		 //   });
+		}
 		 //选完文件后不自动上传
 		upload.render({
 		    elem: '#test8'
@@ -452,6 +489,7 @@
 		      console.log(res);
 		    }
 		  });
+
 	</script>
 </body>
 </html>
