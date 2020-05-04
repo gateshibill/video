@@ -90,6 +90,9 @@ public class JsonUtil {
 	public static String buildSuccessJson(String code, String message) {
 		return String.format("{\"code\": %s, \"msg\": %s}", code, message);
 	}
+	public static String buildSuccessJson(int code, String message) {
+		return String.format("{\"code\": %d, \"msg\": %s}", code, message);
+	}
 	public static String buildSuccessJson(String code, String message,Object obj) {
 		String str = JsonUtil.gson.toJson(obj);
 		return String.format("{\"code\":%s, \"msg\": %s, \"object\": %s}", code,message,str);

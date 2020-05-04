@@ -238,7 +238,7 @@ public class ExcelReader {
         cell = row.getCell(0);
         String idStr = convertCellValueToString(cell);
         if (null == idStr || "".equals(idStr)) {
-        	return channel;
+        	return null;
         }else {
              Integer id =Integer.parseInt(idStr);
              channel.setId(id);

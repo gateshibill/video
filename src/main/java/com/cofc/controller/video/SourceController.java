@@ -11,22 +11,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cofc.pojo.video.Channel;
 import com.cofc.pojo.video.Source;
+import com.cofc.service.video.ChannelService;
 import com.cofc.service.video.SourceService;
 import com.cofc.util.BaseUtil;
 import com.cofc.util.ExcelReader;
 import com.cofc.util.JsonUtil;
 import com.cofc.util.NetworkUtil;
 
-
 @Controller
 @RequestMapping("/video")
 public class SourceController extends BaseUtil {
 	@Resource
 	private SourceService sourceService;
+	@Resource
+	private ChannelService channelService;
 	public static Logger log = Logger.getLogger(SourceController.class);
 
 	// 1.添加节点资源
@@ -76,7 +79,7 @@ public class SourceController extends BaseUtil {
 	}
 	
 	@RequestMapping("/importExcelChannels")
-    public void importExcelChannels(HttpServletResponse response,MultipartFile file) {
+    public void importExcelChannels(HttpServletResponse response,@RequestParam(value = "file") CommonsMultipartFile file) {
         // 检查前台数据合法性
         if (null == file || file.isEmpty()) {
         	log.warn("上传的Excel商品数据文件为空！上传时间：" + new Date());
@@ -84,20 +87,27 @@ public class SourceController extends BaseUtil {
             return ;
         }
         
-		  log.info("importExcelChannels() 上传文件："+file.getName()+"/"+file.getSize() );
+	    log.info("importExcelChannels() 上传文件："+file.getName()+"/"+file.getSize()+"/"+file.getOriginalFilename());
 
         try {
             // 解析Excel
             List<Channel> list = ExcelReader.readExcel(file);
            for(Channel channel:list) {
         	 log.debug(channel.detail());  
+        	 System.out.println(channel.detail());
+        	Channel c = channelService.getChannelById(channel.getId());
+        	if(null==c) {
+        		channelService.addChannel(channel);
+        	}else {
+        		channelService.updateChannel(channel);
+        	}
            }
             // todo 进行业务操作
-        	output(response, JsonUtil.buildSuccessJson("0", "success"));
+        	output(response, JsonUtil.buildFalseJson("0", "success"));
             return ;
         } catch (Exception e) {
         	log.warn("上传的Excel商品数据文件为空！上传时间：" + new Date());
-        	output(response, JsonUtil.buildSuccessJson("2", "解析文件异常"));
+        	output(response, JsonUtil.buildFalseJson("2", "解析文件异常"));
         }
 
     }
