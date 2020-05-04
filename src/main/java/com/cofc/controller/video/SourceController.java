@@ -11,10 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.cofc.pojo.video.Channel;
 import com.cofc.pojo.video.Source;
 import com.cofc.service.video.SourceService;
 import com.cofc.util.BaseUtil;
+import com.cofc.util.ExcelReader;
 import com.cofc.util.JsonUtil;
+import com.cofc.util.NetworkUtil;
 
 
 @Controller
@@ -27,7 +32,7 @@ public class SourceController extends BaseUtil {
 	// 1.添加节点资源
 	@RequestMapping("/addSource")
 	public void addSource(HttpServletRequest request, HttpServletResponse response, Source source) throws IOException {
-		String ip=getIpAddr(request);
+		String ip=NetworkUtil.getIpAddr(request);
 		Source s= sourceService.getSourceListByIpAndLocalIpAndVodIdAndPiece(ip, source.getLocalIp(),source.getVodId(), source.getPiece());
 		if(null!=s)
 		{
@@ -58,7 +63,7 @@ public class SourceController extends BaseUtil {
 	public void getAvailabeSourceList(HttpServletRequest request, HttpServletResponse response, Source source)
 			throws IOException {
 		//这里可以做时间过滤，当前时间10分钟没有更新的作为无效处理，数据量大后影响查询效率。	
-		String ip=getIpAddr(request);		
+		String ip=NetworkUtil.getIpAddr(request);		
 		List<Source> list = sourceService.getSourceListByIpAndVodIdAndPiece(ip,source.getVodId(), source.getPiece(), 0, 10);
 		for(Source s:list)
 		{
@@ -70,40 +75,30 @@ public class SourceController extends BaseUtil {
 		output(response, JsonUtil.buildCustomJson("0", "success", list));
 	}
 	
-    private String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for"); 
-        System.out.println("x-forwarded-for ip: " + ip);
-        if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {  
-            // 多次反向代理后会有多个ip值，第一个ip才是真实ip
-            if( ip.indexOf(",")!=-1 ){
-                ip = ip.split(",")[0];
-            }
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("Proxy-Client-IP");  
-            System.out.println("Proxy-Client-IP ip: " + ip);
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("WL-Proxy-Client-IP");  
-            System.out.println("WL-Proxy-Client-IP ip: " + ip);
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("HTTP_CLIENT_IP");  
-            System.out.println("HTTP_CLIENT_IP ip: " + ip);
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");  
-            System.out.println("HTTP_X_FORWARDED_FOR ip: " + ip);
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("X-Real-IP");  
-            System.out.println("X-Real-IP ip: " + ip);
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getRemoteAddr();  
-            System.out.println("getRemoteAddr ip: " + ip);
-        } 
-        System.out.println("获取客户端ip: " + ip);
-        return ip;  
+	@RequestMapping("/importExcelChannels")
+    public void importExcelChannels(HttpServletResponse response,MultipartFile file) {
+        // 检查前台数据合法性
+        if (null == file || file.isEmpty()) {
+        	log.warn("上传的Excel商品数据文件为空！上传时间：" + new Date());
+        	output(response, JsonUtil.buildSuccessJson("1", "上传文件为空"));
+            return ;
+        }
+        
+		  log.info("importExcelChannels() 上传文件："+file.getName()+"/"+file.getSize() );
+
+        try {
+            // 解析Excel
+            List<Channel> list = ExcelReader.readExcel(file);
+           for(Channel channel:list) {
+        	 log.debug(channel.detail());  
+           }
+            // todo 进行业务操作
+        	output(response, JsonUtil.buildSuccessJson("0", "success"));
+            return ;
+        } catch (Exception e) {
+        	log.warn("上传的Excel商品数据文件为空！上传时间：" + new Date());
+        	output(response, JsonUtil.buildSuccessJson("2", "解析文件异常"));
+        }
+
     }
 }

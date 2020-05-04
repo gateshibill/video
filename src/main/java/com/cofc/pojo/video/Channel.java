@@ -30,6 +30,15 @@ public class Channel {
 	private String seo;
 	private String serverUrl;
 	
+	public String detail() {
+		StringBuffer sb= new StringBuffer();
+		sb.append("id:" + id +"|");
+		sb.append("name:" + name +"|");
+		sb.append("playUrl:" + playUrl +"|");
+		sb.append("posterUrl:" + posterUrl +"|");
+		return sb.toString();
+	}
+	
 	public int getId() {
 		return id;
 	}
