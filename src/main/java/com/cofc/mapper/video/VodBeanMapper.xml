@@ -8,6 +8,7 @@
     <result column="group_id" jdbcType="SMALLINT" property="groupId" />
     <result column="vod_name" jdbcType="VARCHAR" property="vodName" />
     <result column="vod_sub" jdbcType="VARCHAR" property="vodSub" />
+    <result column="tv_serial_number" jdbcType="SMALLINT" property="tvSerialNumber" />
     <result column="vod_en" jdbcType="VARCHAR" property="vodEn" />
     <result column="vod_status" jdbcType="BIT" property="vodStatus" />
     <result column="vod_letter" jdbcType="CHAR" property="vodLetter" />
@@ -100,7 +101,7 @@
     vod_douban_score, vod_reurl, vod_rel_vod, vod_rel_art, vod_play_from, vod_play_server, 
     vod_play_note, vod_down_from, vod_down_server, vod_down_note, vod_pwd, vod_pwd_url, 
     vod_pwd_play, vod_pwd_play_url, vod_pwd_down, vod_pwd_down_url, vod_copyright, vod_points,
-    create_time,last_time,host_team,guest_team,source,hot
+    create_time,last_time,host_team,guest_team,source,hot,tv_serial_number
   </sql>
   <sql id="Blob_Column_List">
     vod_content, vod_play_url, vod_down_url
@@ -191,7 +192,8 @@
       vod_pwd_play_url, vod_pwd_down, vod_pwd_down_url, 
       vod_copyright, vod_points, vod_content, 
       vod_play_url, vod_down_url,
-      create_time,last_time,host_team,guest_team,source,hot)
+      create_time,last_time,host_team,guest_team,source,hot,
+      tv_serial_number)
     values (#{vodId,jdbcType=INTEGER}, #{typeId,jdbcType=SMALLINT}, #{typeId1,jdbcType=SMALLINT}, 
       #{groupId,jdbcType=SMALLINT}, #{vodName,jdbcType=VARCHAR}, #{vodSub,jdbcType=VARCHAR}, 
       #{vodEn,jdbcType=VARCHAR}, #{vodStatus,jdbcType=BIT}, #{vodLetter,jdbcType=CHAR}, 
@@ -219,7 +221,8 @@
       #{vodCopyright,jdbcType=BIT}, #{vodPoints,jdbcType=SMALLINT}, #{vodContent,jdbcType=LONGVARCHAR}, 
       #{vodPlayUrl,jdbcType=LONGVARCHAR}, #{vodDownUrl,jdbcType=LONGVARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP},#{lastTime,jdbcType=TIMESTAMP}, #{hostTeam,jdbcType=VARCHAR}, 
-      #{guestTeam,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{hot,jdbcType=INTEGER})
+      #{guestTeam,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{hot,jdbcType=INTEGER},
+      #{tvSerialNumber,jdbcType=SMALLINT}, )
   </insert>
   <insert id="insertSelective" parameterType="com.cofc.pojo.video.VodBean">
     insert into mac_vod
@@ -1137,5 +1140,23 @@
 		 <if test="groupId != null">
 			and groupId=#{groupId}
 		 </if>		 	 	
-	</select>  	     
+	</select>  	
+	<select id="getTvSerials" resultMap="BaseResultMap">
+		select * from mac_vod where vod_sub=0 and vod_serial=1
+		 <if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>	
+	</select>
+	<select id="getTvSerial" resultMap="BaseResultMap">
+		select * from mac_vod where 1=1
+		 <if test="vodTv != null">
+			and vod_tv=#{vodTv}
+		 </if>
+		 <if test="tvSerialNumber != null">
+			and tv_serial_number=#{tvSerialNumber}
+		 </if>		 
+		 <if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>	
+	</select>	 	    
 </mapper>

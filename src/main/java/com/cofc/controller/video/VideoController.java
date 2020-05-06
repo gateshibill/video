@@ -512,7 +512,7 @@ public class VideoController extends BaseUtil {
 		output(response, JsonUtil.buildCustomJson("0", "succes", vbs));
 	}
 
-	// 获得电视频道节目单
+	// 添加视频，提供给爬虫接口
 	@RequestMapping("/addVod")
 	public void addVod(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		InputStream is = request.getInputStream();
@@ -547,6 +547,42 @@ public class VideoController extends BaseUtil {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
 		}
+	}
+
+	// 1.增加电视剧，走addVod接口
+	// 2.增加电视剧子集，走addVod接口
+	// 3.获取电视剧列表
+	@RequestMapping("/getTvSerials")
+	public void getTvSerials(HttpServletResponse response, Integer page, Integer limit) {
+		System.out.println("getTvSerial():" + page + "/" + limit);
+		if (page == null || page < 0) {
+			page = 0;
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		List<VodBean> tpcs = vodService.getTvSerials(page, limit);
+		// output(response, JsonUtil.buildJson(vbs));
+		output(response, JsonUtil.buildCustomJson("0", "succes", tpcs));
+	}
+
+	// 4.获取电视子集
+	@RequestMapping("/getTvSerial")
+	public void getTvSerial(HttpServletResponse response, String vodTv, Integer tvSerialNumber, Integer page,
+			Integer limit) {
+		System.out.println("getTvSerial():" + vodTv + "/" + tvSerialNumber);
+		if (null == vodTv || null == tvSerialNumber) {
+			output(response, JsonUtil.buildFalseJson("1", "参数不正确"));
+			return;
+		}
+		if (page == null || page < 0) {
+			page = 0;
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		VodBean vb = vodService.getTvSerial(vodTv, tvSerialNumber, page, limit);
+		output(response, JsonUtil.objectToJson("0", vb));
 	}
 
 	// 根据过期日常删除指定源的内容

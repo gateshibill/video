@@ -14,7 +14,15 @@ public class VodBean {
 
 	private String vodName;
 
-	private String vodSub="";
+	private String vodSub="";//是否为电视剧子集，1为0，0为总剧，作为电视剧入口海报页
+
+	private Integer vodTotal=0;//电视剧总集数
+
+	private String vodSerial="";//1为电视剧
+	
+	private int tvSerialNumber;//电视剧集序号
+	
+	private String vodTv="";
 
 	private String vodEn="";
 
@@ -47,12 +55,6 @@ public class VodBean {
 	private String vodRemarks="";
 
 	private String vodPubdate="";
-
-	private Integer vodTotal=0;
-
-	private String vodSerial="";
-
-	private String vodTv="";
 
 	private String vodWeekday="";
 
@@ -836,6 +838,14 @@ public class VodBean {
 
 	public void setHot(int hot) {
 		this.hot = hot;
+	}
+
+	public int getTvSerialNumber() {
+		return tvSerialNumber;
+	}
+
+	public void setTvSerialNumber(int tvSerialNumber) {
+		this.tvSerialNumber = tvSerialNumber;
 	}
 
 }

@@ -2,6 +2,8 @@ package com.cofc.service.video;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.cofc.pojo.video.VodBean;
@@ -46,4 +48,10 @@ public interface VodBeanService {
 	int updateByPrimaryKey(VodBean record);
 
 	int updatePlayUrlByNameAndDirector(VodBean record);
+	
+	List<VodBean> getTvSerials(@Param("page") Integer page,
+			@Param("limit") Integer limit);
+	VodBean getTvSerial(@Param("vodTv") String vodTv,@Param("tvSerialNumber")Integer tvSerialNumber,@Param("page") Integer page,
+			@Param("limit") Integer limit);
+	
 }
