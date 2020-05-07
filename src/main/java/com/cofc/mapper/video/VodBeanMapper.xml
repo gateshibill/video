@@ -1147,6 +1147,16 @@
 			limit #{page},#{limit}
 		</if>	
 	</select>
+	<select id="getTvSequels" resultMap="BaseResultMap">
+		select * from mac_vod where vod_sub=1
+		 <if test="vodTv != null">
+			and vod_tv=#{vodTv}
+		 </if>	 
+		  order by tv_serial_number asc
+		 <if test="page != null and limit != null">
+			limit #{page},#{limit}
+		</if>	
+	</select>	
 	<select id="getTvSerial" resultMap="BaseResultMap">
 		select * from mac_vod where 1=1
 		 <if test="vodTv != null">

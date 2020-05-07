@@ -561,9 +561,25 @@ public class VideoController extends BaseUtil {
 		if (limit == null) {
 			limit = 10;
 		}
-		List<VodBean> tpcs = vodService.getTvSerials(page, limit);
-		// output(response, JsonUtil.buildJson(vbs));
-		output(response, JsonUtil.buildCustomJson("0", "succes", tpcs));
+		List<VodBean> list = vodService.getTvSerials(page, limit);
+		output(response, JsonUtil.buildCustomJson("0", "succes", list));
+	}
+	//获取一部连续剧的整个续集
+	@RequestMapping("/getTvSequels")
+	public void getTvSequels(HttpServletResponse response, String vodTv,Integer page, Integer limit) {
+		System.out.println("getTvSequels():" + vodTv+"/"+page + "/" + limit);
+		if (null == vodTv) {
+			output(response, JsonUtil.buildFalseJson("1", "参数不正确"));
+			return;
+		}
+		if (page == null || page < 0) {
+			page = 0;
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		List<VodBean> list = vodService.getTvSequels(vodTv,page, limit);
+		output(response, JsonUtil.buildCustomJson("0", "succes", list));
 	}
 
 	// 4.获取电视子集

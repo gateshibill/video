@@ -51,6 +51,8 @@ public interface VodBeanService {
 	
 	List<VodBean> getTvSerials(@Param("page") Integer page,
 			@Param("limit") Integer limit);
+	List<VodBean> getTvSequels(@Param("vodTv") String vodTv,@Param("page") Integer page,
+			@Param("limit") Integer limit);
 	VodBean getTvSerial(@Param("vodTv") String vodTv,@Param("tvSerialNumber")Integer tvSerialNumber,@Param("page") Integer page,
 			@Param("limit") Integer limit);
 	
