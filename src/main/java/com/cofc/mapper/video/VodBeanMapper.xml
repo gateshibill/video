@@ -222,7 +222,7 @@
       #{vodPlayUrl,jdbcType=LONGVARCHAR}, #{vodDownUrl,jdbcType=LONGVARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP},#{lastTime,jdbcType=TIMESTAMP}, #{hostTeam,jdbcType=VARCHAR}, 
       #{guestTeam,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{hot,jdbcType=INTEGER},
-      #{tvSerialNumber,jdbcType=SMALLINT}, )
+      #{tvSerialNumber,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="com.cofc.pojo.video.VodBean">
     insert into mac_vod
