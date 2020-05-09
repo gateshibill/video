@@ -26,8 +26,14 @@
 		margin-bottom:0px;
 	}
 </style>
+    <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet" >
+    <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js" type="text/javascript"></script>
 </head>
 <body>
+    <style>
+        .video-js .vjs-tech {position: relative !important;}
+    </style>
 	<blockquote class="layui-elem-quote">
 		<form class="layui-form layui-form-pane" action="">
 			<div class="layui-form-item">
@@ -80,11 +86,12 @@
 	</blockquote>
 	<table class="layui-table" id="descovery" lay-filter="descovery"></table>
 	<script type="text/html" id="toolBar">
-    <a class="layui-btn layui-btn layui-btn-mini" lay-event="player" >播放</a>
+   <!-- var url=obj.data.playUrl;-->
+   <!-- <a class="layui-btn layui-btn layui-btn-mini" target="_parent" href={url} >播放</a> -->
+    <a class="layui-btn layui-btn layui-btn-mini" lay-event="player" >play</a>
 	<a class="layui-btn layui-btn layui-btn-mini" lay-event="lookUser" >查看</a>
-   <%-- <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="setAgent" >设置代理</a> --%>
   	<a class="layui-btn layui-btn-danger layui-btn-mini" onclick="deleteUser({{d.userId}})">删除</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" onclick="play({{d.userId}})">播放</a>
+     <a class="layui-btn layui-btn-danger layui-btn-mini" onclick="play()">播放</a>
 
 </script>
 	<!-- 上架状态模板 -->
@@ -342,21 +349,27 @@
 						}
 					});
 				} else if (obj.event === 'player') {
-					//点击某个按钮 => 弹出层 => 播放视频
-				    //$('#player').click(function () {
-				        playUrl = data.playUrl;  //获取到播放的url
-				    	//layer.msg('播放串:'+playUrl);
-				        var loadstr = '<video width="100%" height="100%"  controls="controls" autobuffer="autobuffer"  autoplay="autoplay" loop="loop">' +
-				                '<source src='+playUrl+' type="video/mp4"></source></video>';
-				        layer.open({
-				            type: 1,
-				            title: false,
-				            area: ['730px', '500px'],
-				            shade: [0.8, 'rgb(14, 16, 22)'],
-				            skin: 'demo-class',
-				            content: loadstr
-				        });
-				    //});
+					var index = layui.layer
+					.open({
+						title : "播放",
+						type : 2,
+						content : "${ctx}/video/play.do?url="+'http://localhost:8080/pvideo/play_test.jsp?src=http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/48c8a9475285890781000441992/playlist.m3u8',						
+						success : function(
+								layero,
+								index) {
+							setTimeout(
+									function() {
+										layui.layer
+												.tips(
+														'点击此处返回',
+														'.layui-layer-setwin .layui-layer-close',
+														{
+															tips : 3
+														});
+									}, 500)
+						}
+					})
+					layui.layer.full(index);
 				} else {
 					$.ajax({
 						data : 'json',
@@ -455,9 +468,7 @@
 		       // vUrl = $(this).attr('src');  //获取到播放的url
 		       vUrl = 'http://www.haoshi360.com/girl/7/7.mp4';
 		        var loadstr = '<video width="100%" height="100%"  controls="controls" autobuffer="autobuffer"  autoplay="autoplay" loop="loop">' +
-		                '<source src=‘+
-		                vUrl+
-		                ’ type="video/mp4"></source></video>';
+		                '<source src='+vUrl+' type="video/mp4"></source></video>';
 		        layer.open({
 		            type: 1,
 		            title: false,
@@ -468,7 +479,21 @@
 		        });
 		 //   });
 		}
-
+		//播放视频
+		function playM3u8(){
+			    url = 'http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/48c8a9475285890781000441992/playlist.m3u8';
+		        var loadstr = '<video id="myVideo" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" data-setup="{}" style="width: 100%;height: auto">'+
+		                '<source id="source" src='+'http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/48c8a9475285890781000441992/playlist.m3u8'+' type="application/x-mpegURL"></source></video>'		                
+		        layer.open({
+		            type: 1,
+		            title: false,
+		            area: ['730px', '500px'],
+		            shade: [0.8, 'rgb(14, 16, 22)'],
+		            skin: 'demo-class',
+		            content: loadstr
+		        });
+		 //   });
+		}
 		 //选完文件后不自动上传
 		upload.render({
 		    elem: '#test8'
