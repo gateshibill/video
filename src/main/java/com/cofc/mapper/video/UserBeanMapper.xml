@@ -333,22 +333,22 @@
 			<if test="groupId != null">
 				group_id = #{groupId,jdbcType=SMALLINT},
 			</if>
-			<if test="userName != null">
+			<if test="userName != null and userName !=''">
 				user_name = #{userName,jdbcType=VARCHAR},
 			</if>
-			<if test="userPwd != null">
+			<if test="userPwd != null and  userPwd !=''">
 				user_pwd = #{userPwd,jdbcType=VARCHAR},
 			</if>
 			<if test="userNickName != null">
 				user_nick_name = #{userNickName,jdbcType=VARCHAR},
 			</if>
-			<if test="userQq != null">
+			<if test="userQq != null and userQq !=''">
 				user_qq = #{userQq,jdbcType=VARCHAR},
 			</if>
-			<if test="userEmail != null">
+			<if test="userEmail != null and userEmail !=''">
 				user_email = #{userEmail,jdbcType=VARCHAR},
 			</if>
-			<if test="userPhone != null">
+			<if test="userPhone != null and userPhone !=''">
 				user_phone = #{userPhone,jdbcType=VARCHAR},
 			</if>
 			<if test="userStatus != null">

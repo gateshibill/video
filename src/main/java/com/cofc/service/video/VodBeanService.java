@@ -19,11 +19,14 @@ public interface VodBeanService {
 
 	VodBean selectByPrimaryKey(Integer vodId);
 
-	VodBean getVodByNameAndDirector(@Param("vodName") String vodName, @Param("vodDirector") String vodDirector);
+	//防止数据插重复
+	VodBean getVodByNameAndDirector(@Param("vodName") String vodName, @Param("vodDirector") String vodDirector,
+			@Param("tvSerialNumber") Integer tvSerialNumber);
 
 	List<VodBean> getVods(@Param("typeId") Integer typeId, @Param("typeId1") Integer typeId1,
 			@Param("groupId") Integer groupId, @Param("page") Integer page, @Param("limit") Integer limit);
-	List<VodBean> getVodsEx(@Param("vod") VodBean vod,@Param("page") Integer page, @Param("limit") Integer limit);
+
+	List<VodBean> getVodsEx(@Param("vod") VodBean vod, @Param("page") Integer page, @Param("limit") Integer limit);
 
 	List<VodBean> getSportsVods(@Param("typeId") Integer typeId, @Param("typeId1") Integer typeId1,
 			@Param("groupId") Integer groupId, @Param("page") Integer page, @Param("limit") Integer limit);
@@ -48,12 +51,13 @@ public interface VodBeanService {
 	int updateByPrimaryKey(VodBean record);
 
 	int updatePlayUrlByNameAndDirector(VodBean record);
-	
-	List<VodBean> getTvSerials(@Param("page") Integer page,
+
+	List<VodBean> getTvSerials(@Param("page") Integer page, @Param("limit") Integer limit);
+
+	List<VodBean> getTvSequels(@Param("vodTv") String vodTv, @Param("page") Integer page,
 			@Param("limit") Integer limit);
-	List<VodBean> getTvSequels(@Param("vodTv") String vodTv,@Param("page") Integer page,
-			@Param("limit") Integer limit);
-	VodBean getTvSerial(@Param("vodTv") String vodTv,@Param("tvSerialNumber")Integer tvSerialNumber,@Param("page") Integer page,
-			@Param("limit") Integer limit);
-	
+
+	VodBean getTvSerial(@Param("vodTv") String vodTv, @Param("tvSerialNumber") Integer tvSerialNumber,
+			@Param("page") Integer page, @Param("limit") Integer limit);
+
 }

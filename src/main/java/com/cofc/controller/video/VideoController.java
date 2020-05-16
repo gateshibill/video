@@ -521,8 +521,8 @@ public class VideoController extends BaseUtil {
 		try {
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
 			VodBean vod = gson.fromJson(message, VodBean.class);
-			System.out.println("vod:" + vod);
-			VodBean tmp = vodService.getVodByNameAndDirector(vod.getVodName(), vod.getVodDirector());
+			//System.out.println("vod:" + vod);
+			VodBean tmp = vodService.getVodByNameAndDirector(vod.getVodName(), vod.getVodDirector(),vod.getTvSerialNumber());
 
 			// 根据爬取关键词，给影片分类
 			if (null != vod.getVodClass() && vod.getVodClass().length() > 0) {
@@ -538,8 +538,10 @@ public class VideoController extends BaseUtil {
 			}
 			if (null == tmp) {
 				vodService.insert(vod);
+				System.out.println("插入成功");
 			} else {
 				vodService.updatePlayUrlByNameAndDirector(vod);
+				System.out.println("更新成功");
 			}
 			output(response, JsonUtil.buildSuccessJson("0", "success"));
 		} catch (Exception e) {

@@ -147,6 +147,7 @@
     select * from mac_vod
     where vod_name = #{vodName} 
     and vod_director = #{vodDirector} 
+    and tv_serial_number = #{tvSerialNumber}
   </select>  
   <select id="getRcmdVods" resultMap="BaseResultMap">
     select * from mac_vod
@@ -1103,9 +1104,12 @@
         </if>
         <if test="typeId != null">
           type_id = #{typeId,jdbcType=SMALLINT},
-        </if>        
+        </if> 
+        <if test="tvSerialNumber != null">
+          tv_serial_number = #{tvSerialNumber,jdbcType=SMALLINT},
+        </if>                 
     </set>
-           where vod_name = #{vodName} and vod_director = #{vodDirector}
+           where vod_name = #{vodName} and vod_director = #{vodDirector} and  tv_serial_number = #{tvSerialNumber} 
   </update>
 	<select id="getVodListByAssemble" resultMap="BaseResultMap">
 		select * from mac_vod where 1=1
