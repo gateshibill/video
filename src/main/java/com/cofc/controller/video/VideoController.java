@@ -18,6 +18,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cofc.pojo.video.Anchor;
@@ -601,6 +602,17 @@ public class VideoController extends BaseUtil {
 		}
 		VodBean vb = vodService.getTvSerial(vodTv, tvSerialNumber, page, limit);
 		output(response, JsonUtil.objectToJson("0", vb));
+	}
+	
+	// 跳转后台用户列表
+	@RequestMapping("/play")
+	public ModelAndView play(ModelAndView modelView, HttpServletRequest request,String url) {
+		System.out.println("play(): url" + url);
+		// List<UserCommon> userList = usercService.getUserIdList();
+		modelView.addObject("url",url);// 
+		// modelView.addObject("userList", userList);
+		modelView.setViewName("video/play");
+		return modelView;
 	}
 
 	// 根据过期日常删除指定源的内容
