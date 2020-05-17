@@ -1,4 +1,4 @@
-package com.cofc.util;
+package com.cofc.util.snmp;
 
 import java.io.IOException;
 
@@ -91,7 +91,7 @@ new MessageDispatcherImpl());
 
 listenAddress = GenericAddress.parse(System.getProperty(
 
-"snmp4j.listenAddress", "udp:192.168.1.23/162")); // 本地IP与监听端口
+"snmp4j.listenAddress", "udp:192.168.0.111/162")); // 本地IP与监听端口
 
 TransportMapping transport;
 

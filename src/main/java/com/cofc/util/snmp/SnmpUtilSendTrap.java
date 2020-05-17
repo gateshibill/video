@@ -1,4 +1,4 @@
-package com.cofc.util;
+package com.cofc.util.snmp;
 
 import java.io.IOException;
 
@@ -56,7 +56,7 @@ public void initComm() throws IOException {
  
 // 设置管理进程的IP和端口
 
-targetAddress = GenericAddress.parse("udp:192.168.1.23/162");
+targetAddress = GenericAddress.parse("udp:192.168.0.111/162");
 
 TransportMapping transport = new DefaultUdpTransportMapping();
 

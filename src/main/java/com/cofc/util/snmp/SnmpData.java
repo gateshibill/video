@@ -1,4 +1,4 @@
-package com.cofc.util;
+package com.cofc.util.snmp;
 
 import java.io.IOException;
 

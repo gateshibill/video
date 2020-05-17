@@ -1,4 +1,4 @@
-package  com.cofc.util;
+package  com.cofc.util.snmp;
 
 
   
@@ -12,9 +12,8 @@ import  org.snmp4j.log.LogAdapter;
 
 import  org.snmp4j.log.LogFactory;
 
-import  com.cofc.util.SnmpData;
+import com.cofc.util.snmp.SnmpData;
 
-  
 import java.util.ArrayList;
 
 import java.util.List;
