@@ -1,16 +1,14 @@
-package  com.cofc.util.snmp;
+package com.cofc.util.snmp;
 
+import java.util.ArrayList;
 
-  
-import  java.util.ArrayList;
+import java.util.List;
 
-import  java.util.List;
+import org.snmp4j.log.ConsoleLogFactory;
 
-import  org.snmp4j.log.ConsoleLogFactory;
+import org.snmp4j.log.LogAdapter;
 
-import  org.snmp4j.log.LogAdapter;
-
-import  org.snmp4j.log.LogFactory;
+import org.snmp4j.log.LogFactory;
 
 import com.cofc.util.snmp.SnmpData;
 
@@ -26,133 +24,117 @@ import org.snmp4j.log.LogFactory;
 
 /**
  * 
- * @author viviyiyi
- * 来源
- *https://blog.csdn.net/qq_36838191/article/details/81282428
+ * @author viviyiyi 来源
+ *         https://blog.csdn.net/qq_36838191/article/details/81282428
  */
 public class SnmpTest {
 
-
-public static void main(String[] args) {
-
+	public static void main(String[] args) {
 
 // TODO Auto-generated method stub
 
-SnmpTest test = new SnmpTest();
+		SnmpTest test = new SnmpTest();
 
+		test.testGet();
 
-test.testGet();
+	}
 
+	public void testGet()
 
-}
+	{
 
+		String ip = "127.0.0.1";
 
-public void testGet()
+		String community = "public";
 
-{
+		String oidval = "1.3.6.1.2.1.1.6.0";
 
-String ip = "127.0.0.1";
+		SnmpData.snmpGet(ip, community, oidval);
 
-String community = "public";
+	}
 
-String oidval = "1.3.6.1.2.1.1.6.0";
+	public void testGetList() {
 
-SnmpData.snmpGet(ip, community, oidval);
+		String ip = "127.0.0.1";
 
-}
+		String community = "public";
 
+		List<String> oidList = new ArrayList<String>();
 
-public void testGetList(){
+		oidList.add("1.3.6.1.2.1.1.5.0");
 
-String ip = "127.0.0.1";
+		oidList.add("1.3.6.1.2.1.1.7.0");
 
-     String community = "public";
+		SnmpData.snmpGetList(ip, community, oidList);
 
-     List<String> oidList=new ArrayList<String>();
+	}
 
-     oidList.add("1.3.6.1.2.1.1.5.0");
+	public void testGetAsyList()
 
-     oidList.add("1.3.6.1.2.1.1.7.0");
+	{
 
-   SnmpData.snmpGetList(ip, community, oidList);
+		String ip = "127.0.0.1";
 
-}
+		String community = "public";
 
+		List<String> oidList = new ArrayList<String>();
 
-public void testGetAsyList()
+		oidList.add("1.3.6.1.2.1");
 
-{
+		oidList.add("1.3.6.1.2.12");
 
-String ip = "127.0.0.1";
+		SnmpData.snmpAsynGetList(ip, community, oidList);
 
-String community = "public";
+		System.out.println("i am first!");
 
-List<String> oidList=new ArrayList<String>();
+	}
 
-oidList.add("1.3.6.1.2.1");
+	public void testWalk()
 
-oidList.add("1.3.6.1.2.12");
+	{
 
-SnmpData.snmpAsynGetList(ip, community, oidList);
+		String ip = "127.0.0.1";
 
-System.out.println("i am first!");
+		String community = "public";
 
-}
+		String targetOid = "1.3.6.1.2.1.1.5.0";
 
- 
- 
-public void testWalk()
+		SnmpData.snmpWalk(ip, community, targetOid);
 
-{
+	}
 
-String ip = "127.0.0.1";
+	public void testAsyWalk()
 
-String community = "public";
+	{
 
-String targetOid = "1.3.6.1.2.1.1.5.0";
+		String ip = "127.0.0.1";
 
-SnmpData.snmpWalk(ip, community, targetOid);
-
-}
-
- 
- 
-public void testAsyWalk()
-
-{
-
-String ip = "127.0.0.1";
-
-String community = "public";
+		String community = "public";
 
 // 异步采集数据
 
-SnmpData.snmpAsynWalk(ip, community, "1.3.6.1.2.1.25.4.2.1.2");
+		SnmpData.snmpAsynWalk(ip, community, "1.3.6.1.2.1.25.4.2.1.2");
 
-}
+	}
 
- 
- 
-public void testSetPDU() throws Exception
+	public void testSetPDU() throws Exception
 
-{
+	{
 
-String ip = "127.0.0.1";
+		String ip = "127.0.0.1";
 
-String community = "public";
+		String community = "public";
 
-SnmpData.setPDU(ip, community, "1.3.6.1.2.1.1.6.0","jianghuiwen");
+		SnmpData.setPDU(ip, community, "1.3.6.1.2.1.1.6.0", "jianghuiwen");
 
-}
+	}
 
- 
- 
-public void testVersion()
+	public void testVersion()
 
-{
+	{
 
-System.out.println(org.snmp4j.version.VersionInfo.getVersion());
+		System.out.println(org.snmp4j.version.VersionInfo.getVersion());
 
-}
+	}
 
 }
