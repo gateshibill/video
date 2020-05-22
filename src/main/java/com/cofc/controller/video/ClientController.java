@@ -224,6 +224,7 @@ public class ClientController extends BaseUtil {
 			userService.updateByPrimaryKeySelective(user);
 
 			output(response, JsonUtil.buildSuccessJson("0", "充值成功", user));
+			//output(response, JsonUtil.objectToJson("0", user));
 		} catch (Exception e) {
 			e.printStackTrace();
 			output(response, JsonUtil.buildSuccessJson("405", "error"));
