@@ -11,7 +11,7 @@ public interface ChargeCardService {
 
 	public void delChargeCard(@Param("id") Integer id);
 
-	public ChargeCard getChargeCardByCardId(@Param("cardId") Integer cardId);
+	public ChargeCard getChargeCardByCardId(@Param("cardId") String cardId);
 
 	public ChargeCard getChargeCardByUserId(@Param("userId") Integer userId);
 }
