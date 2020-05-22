@@ -90,18 +90,91 @@ public class ClientController extends BaseUtil {
 
 	public static Logger log = Logger.getLogger("ClientController");
 
-	// 充值
+//	// 充值
+//	@RequestMapping("/charge")
+//	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId, Integer userId)
+//			throws IOException {
+//		log.info("charge() " + cardId + "/" + userId);
+//		if (null == cardId || null == userId) {
+//			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
+//			return;
+//		}
+//		try {
+//			// 1.卡是否存在；
+//			ChargeCard chargeCard = chargeCardService.getChargeCardByCardId(cardId);
+//			if (null == chargeCard) {
+//				output(response, JsonUtil.buildFalseJson("2", "卡不存在"));
+//				return;
+//			} else if (0 != chargeCard.getUsed()) {
+//				output(response, JsonUtil.buildFalseJson("3", "卡已经使用过"));
+//				return;
+//			} else if (0 != chargeCard.getValidate()) {
+//				output(response, JsonUtil.buildFalseJson("4", "卡无效"));
+//				return;
+//			}
+//			// 获取用户当前到期时间，需要在当前时间基础上增加
+//			UserBean user = userService.getUserByUserId(userId);
+//			Date expire = user.getVipExpire();
+//			if (null == expire || expire.before(new Date())) {
+//				expire = new Date();
+//			}
+//			int type = chargeCard.getType();
+//
+//			Calendar calendar = new GregorianCalendar();
+//			calendar.setTime(expire);
+//			switch (type) {
+//			case 0:
+//				calendar.add(Calendar.DATE, 3);
+//				break;
+//			case 1:// 月卡
+//				calendar.add(Calendar.MONTH, 1);
+//				break;
+//			case 2:// 季卡
+//				calendar.add(Calendar.MONTH, 3);
+//				break;
+//			case 3:// 年卡
+//				calendar.add(Calendar.YEAR, 1);
+//				break;
+//			default:
+//				System.out.println("card type is unknown:" + type);
+//				break;
+//			}
+//			expire = calendar.getTime();
+//			chargeCard.setExpire(expire);
+//			chargeCard.setUsedTime(new Date());
+//			chargeCard.setUsed(1);
+//			chargeCard.setUserId(userId);
+//			chargeCardService.updateChargeCard(chargeCard);
+//
+//			// 更新用戶到期時間
+//			user.setVipExpire(expire);
+//			userService.updateByPrimaryKeySelective(user);
+//
+//			output(response, JsonUtil.buildSuccessJson("0", "充值成功", user));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			output(response, JsonUtil.buildSuccessJson("405", "error"));
+//		}
+//	}
+
+	// post充值
 	@RequestMapping("/charge")
-	public void charge(HttpServletRequest request, HttpServletResponse response, Integer cardId, Integer userId)
-			throws IOException {
-		log.info("charge() " + cardId + "/" + userId);
-		if (null == cardId || null == userId) {
-			output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
-			return;
-		}
+	public void charge(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		InputStream is = request.getInputStream();
+		String message = IOUtils.toString(is, "UTF-8");
+		System.out.println("charge() message:" + message);
 		try {
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
+			ChargeCard cc = gson.fromJson(message, ChargeCard.class);
+
+			log.info("charge() " + cc.getCardId() + "/" + cc.getUserId());
+			if (null == cc.getCardId() || null == cc.getUserId()) {
+				output(response, JsonUtil.buildFalseJson("1", "卡号和用户ID不能为空"));
+				return;
+			}
+
 			// 1.卡是否存在；
-			ChargeCard chargeCard = chargeCardService.getChargeCardByCardId(cardId);
+			ChargeCard chargeCard = chargeCardService.getChargeCardByCardId(cc.getCardId());
 			if (null == chargeCard) {
 				output(response, JsonUtil.buildFalseJson("2", "卡不存在"));
 				return;
@@ -113,10 +186,9 @@ public class ClientController extends BaseUtil {
 				return;
 			}
 			// 获取用户当前到期时间，需要在当前时间基础上增加
-			UserBean user = userService.getUserByUserId(userId);
+			UserBean user = userService.getUserByUserId(cc.getUserId());
 			Date expire = user.getVipExpire();
-			if (null == expire || expire.before(new Date()))
-			{
+			if (null == expire || expire.before(new Date())) {
 				expire = new Date();
 			}
 			int type = chargeCard.getType();
@@ -144,7 +216,7 @@ public class ClientController extends BaseUtil {
 			chargeCard.setExpire(expire);
 			chargeCard.setUsedTime(new Date());
 			chargeCard.setUsed(1);
-			chargeCard.setUserId(userId);
+			chargeCard.setUserId(cc.getUserId());
 			chargeCardService.updateChargeCard(chargeCard);
 
 			// 更新用戶到期時間
@@ -195,7 +267,7 @@ public class ClientController extends BaseUtil {
 				user = userService.login(ub.getUserPhone(), ub.getUserEmail(),
 						MD5Util.MD5Encode(ub.getUserPwd(), "utf-8"));
 
-			} else if (null != ub.getUserId()) {//没有绑定手机用户，没有密码
+			} else if (null != ub.getUserId()) {// 没有绑定手机用户，没有密码
 				user = userService.getUserByUserId(ub.getUserId());
 			}
 
@@ -257,8 +329,8 @@ public class ClientController extends BaseUtil {
 			} else {
 				userService.insert(ub);// 通过数据库生成用户ID
 				System.out.println("user.userId:" + ub.getUserId());
-				//System.out.println("userId:" + userId);
-				//ub.setUserId(userId);
+				// System.out.println("userId:" + userId);
+				// ub.setUserId(userId);
 				output(response, JsonUtil.objectToJson("0", ub));
 			}
 

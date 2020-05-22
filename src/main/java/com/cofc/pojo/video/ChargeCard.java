@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class ChargeCard {
 	private int id;// vod_id
-	private int cardId;// 
-	private int userId;// 
+	private String cardId;// 
+	private Integer userId;// 
 	private int type;//0临时卡，1月卡，2季卡，3年卡
 	private String name;//
 	private float price;
@@ -21,13 +21,13 @@ public class ChargeCard {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getCardId() {
+	public String getCardId() {
 		return cardId;
 	}
-	public void setCardId(int cardId) {
+	public void setCardId(String cardId) {
 		this.cardId = cardId;
 	}
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {
