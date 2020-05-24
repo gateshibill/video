@@ -1,4 +1,4 @@
-package com.cofc.controller;
+package com.cofc.controller.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;

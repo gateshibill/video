@@ -1,4 +1,4 @@
-package com.cofc.controller.channel;
+package com.cofc.controller.admin;
 
 import java.io.IOException;
 import java.io.InputStream;

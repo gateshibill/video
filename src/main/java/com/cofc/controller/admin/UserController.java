@@ -1,4 +1,4 @@
-package com.cofc.controller.user;
+package com.cofc.controller.admin;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

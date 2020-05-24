@@ -1,4 +1,4 @@
-package com.cofc.controller.anchor;
+package com.cofc.controller.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,10 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cofc.pojo.BackUser;
-import com.cofc.pojo.video.Anchor;
-
-import com.cofc.pojo.video.Carousel;
-
 import com.cofc.pojo.video.Column;
 import com.cofc.pojo.video.Program;
 import com.cofc.pojo.video.Source;
@@ -33,18 +29,7 @@ import com.cofc.pojo.video.SportsType;
 import com.cofc.pojo.video.Topic;
 import com.cofc.pojo.video.UserBean;
 import com.cofc.pojo.video.VodBean;
-import com.cofc.pojo.video.VodType;
-import com.cofc.service.video.AnchorService;
-
-import com.cofc.service.video.CarouselService;
-import com.cofc.service.video.AnchorService;
-import com.cofc.service.video.ColumnService;
-import com.cofc.service.video.ProgramService;
-import com.cofc.service.video.SportsTypeService;
-import com.cofc.service.video.TopicService;
-import com.cofc.service.video.UserBeanService;
 import com.cofc.service.video.VodBeanService;
-import com.cofc.service.video.VodTypeService;
 import com.cofc.util.BaseUtil;
 import com.cofc.util.JsonUtil;
 import com.cofc.util.wxpay.WXPayUtil;
@@ -52,16 +37,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 @Controller
-@RequestMapping("/anchor")
-public class AnchorController extends BaseUtil {
-	public static Logger log = Logger.getLogger("AnchorController");
+@RequestMapping("/vod")
+public class VodController extends BaseUtil {
+	public static Logger log = Logger.getLogger("VodBeanController");
 	
 	@Resource
-	private AnchorService anchorService;
+	private VodBeanService vodBeanService;
 
 	// 跳转后台用户列表
-	@RequestMapping("/toAnchorList")
-	public ModelAndView toAnchorList(ModelAndView modelView, HttpServletRequest request) throws ParseException {
+	@RequestMapping("/toVodList")
+	public ModelAndView toVodBeanList(ModelAndView modelView, HttpServletRequest request) throws ParseException {
 		BackUser bu = (BackUser) request.getSession().getAttribute("loginer");
 
 		log.info("进入后台用户列表的jsp页面");
@@ -69,27 +54,27 @@ public class AnchorController extends BaseUtil {
 		modelView.addObject("loginPlat", bu.getLoginPlat());// 传给前台模板：空值显示百享园，不空显示相对应的
 		modelView.addObject("appList", null);
 		// modelView.addObject("userList", userList);
-		modelView.setViewName("anchor/anchorList");
+		modelView.setViewName("vod/vodList");
 		return modelView;
 	}
 	
 
 	// 获得电视频道
-	@RequestMapping("/getAnchorById")
-	public ModelAndView getAnchorByIdshowUserDetails(HttpServletRequest request, ModelAndView modelView, Integer id,
+	@RequestMapping("/getVodBeanById")
+	public ModelAndView getVodBeanByIdshowUserDetails(HttpServletRequest request, ModelAndView modelView, Integer id,
 			Integer pageNo){
-		Anchor anchor = anchorService.getAnchorById(id);
+		VodBean vod = vodBeanService.selectByPrimaryKey(id);
 
 		String imgHtml = "";
-		modelView.setViewName("anchor/anchorDetails");
-		modelView.addObject("anchor", anchor);
+		modelView.setViewName("vod/vodDetails");
+		modelView.addObject("vod", vod);
 		modelView.addObject("page", pageNo);
 		modelView.addObject("imgHtml", imgHtml);
 		return modelView;
 	}
 	// 获得电视频道
-	@RequestMapping("/getAnchorList")
-	public void getAnchorList(HttpServletRequest request, HttpServletResponse response, String name, Integer status,Integer page,Integer limit) throws IOException {
+	@RequestMapping("/getVodBeanList")
+	public void getVodBeanList(HttpServletRequest request, HttpServletResponse response, String vodName, Integer typeId,Integer typeId1,Integer groupId,Integer page,Integer limit) throws IOException {
 		if (page == null || page < 1) {
 			page = 1;
 		}
@@ -97,21 +82,19 @@ public class AnchorController extends BaseUtil {
 			limit = 10;
 		}
 
-		List<Anchor> anchorList = anchorService.getAnchorListByAssemble(name,status,(page-1) * limit, limit);
-		System.out.println("anchorList:" + anchorList.size());
-		int rowsCount = anchorService.getAnchorCountByAssemble(name,status);
-		output(response, JsonUtil.buildJsonByTotalCount(anchorList, rowsCount));
+		List<VodBean> vodList = vodBeanService.getVodListByAssemble(vodName, typeId, typeId1, groupId, (page-1) * limit, limit);
+		System.out.println("vodList:" + vodList.size());
+		int rowsCount = vodBeanService.getVodCountByAssemble(vodName, typeId, typeId1, groupId);
+		output(response, JsonUtil.buildJsonByTotalCount(vodList, rowsCount));
 	}
 
 	// 更新频道
-	@RequestMapping("/updateAnchor")
-	public void updateAnchor(HttpServletRequest request, HttpServletResponse response,Anchor anchor) throws IOException {
-		//InputStream is = request.getInputStream();
-		//String message = IOUtils.toString(is, "UTF-8");
-		//System.out.println("message:" + message);
-		System.out.println("anchor:" + anchor.getName());
+	@RequestMapping("/updateVodBean")
+	public void updateVodBean(HttpServletRequest request, HttpServletResponse response,VodBean vod) throws IOException {
+
+		System.out.println("vod:" + vod.getVodName());
 		try {
-			anchorService.updateAnchor(anchor);
+			vodBeanService.updateByPrimaryKey(vod);
 			output(response, JsonUtil.buildFalseJson("0", "修改成功"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
