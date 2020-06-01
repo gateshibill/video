@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://gppz.55778899.cn/cattle/more-master.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>大神排行榜</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="./resource/css/mui.min.css" rel="stylesheet">
+    <link href="./resource/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./resource/css/swiper.min.css">
+    <script src="./resource/js/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="./resource/js/swiper.min.js"></script>
+    
+<link href="./resource/css/person.css" rel="stylesheet">
+<style type="text/css">
+    body{
+        background: #f5f5f5!important;
+    }
+</style>
+
+<link rel="stylesheet" href="./resource/css/layer.css" id="layuicss-layer"></head>
+<body class="mui-ios mui-ios-10 mui-ios-10-3 mui-ios-11 mui-ios-11-0" style="">
+    
+<header class="has_back_top ">
+    大神排行榜
+    <a href="index.html" class="back_icon">
+        <img src="./resource/img/back_icon.png">
+    </a>
+</header>
+<section class="more_daren_con">
+    <div class="flex_nowrap common_nav">
+        <a class="active" href="dsrank.html?type=1">
+            <span>总排行</span>
+            <img src="./resource/img/up-arrow.png">
+        </a>
+        <a href="dsrank.html?type=2">
+            <span>日排行</span>
+            <img src="./resource/img/up-arrow.png">
+        </a>
+        <a href="dsrank.html?type=3">
+            <span>月排行</span>
+            <img src="./resource/img/up-arrow.png">
+        </a>
+    </div>
+
+
+    <ul class="rink_tab_content daren">
+
+                <li>
+            <div class="clear_fl">
+                <a href="#?uid=1" class="lf">
+                <img class="lf user_pic" src="./resource/img/user_id_1.png">
+                <p class="lf user_name">策略家2222 <img src="./resource/img/niuren.png"></p>
+                </a>
+                <a href="javascript:void(0)" onclick="follow(&#39;1&#39;, this);" class="rt guanzhu_btn active"></a>
+            </div>
+            <div class="clear_fl daren_info">
+                <p class="lf celueshu">策略数: <span>35</span></p>
+                <div class="rt celue_right">
+                    <p class="lf celueshu">胜算率 <span>37.14%</span></p>
+                    <p class="lf celueshu">收益率 <span>1405.52%</span></p>
+                </div>
+            </div>
+        </li>
+                
+        
+    </ul>
+</section>
+
+    
+
+
+<script src="./resource/js/mui.min.js"></script>
+<script type="text/javascript" src="./resource/js/common.js"></script>
+<script type="text/javascript" src="./resource/js/config.js"></script>
+
+<script type="text/javascript">
+    $(".common_nav").on("tap" , "a" , function(e){
+        e.preventDefault();
+        $(this).addClass("active").siblings(".active").removeClass("active");
+    });
+</script>
+<script type="text/javascript" src="./resource/js/layer.js"></script>
+<script type="text/javascript">
+    function follow(id, obj)
+    {
+//        var content = '是否关注大神？';
+        var msg = '已关注';
+        var type = 1;//关注
+//        console.log(obj);
+
+
+        if($(obj).hasClass('active')){
+//            content = '是否取消关注大神？';
+            msg = '已取消关注';
+            type = 2;//取关
+        }
+//        layer.open({
+//            title : '',
+//            content: content
+//            ,btn: ['是', '否']
+//            ,yes: function(index, layero){
+                var _url = '/cattle/follow.html',
+                    _oData = {user_id : id, type:type};
+                $ajaxCustom(_url, _oData, function(res){
+                    if(res.state){
+                        if(type == 2){
+                            $(obj).removeClass('active');
+                        }
+                        if(type == 1){
+                            $(obj).addClass('active');
+                        }
+                        $alert(msg);
+                    }else{
+                        $alert(res.info);
+                    }
+                });
+//            }
+//
+//            ,cancel: function(){
+//
+//                return false 开启该代码可禁止点击该按钮关闭
+//            }
+//        });
+
+    }
+
+</script>
+</body></html>
