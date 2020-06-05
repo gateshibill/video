@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!-- saved from url=(0042)http://gppz.55778899.cn/user/recharge.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>
+充值
+</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="./resource/css/mui.min.css" rel="stylesheet">
+    <link href="./resource/css/person.css" rel="stylesheet">
+    
+
+
+</head>
+
+<body class="payment_body mui-ios mui-ios-11 mui-ios-11-0" style="">
+
+    
+	<header class="header_con">
+		<a href="javascript:history.go(-1)" class="lf">
+			<img src="./resource/img/call_back.png">
+		</a>
+		<p>充值</p>
+	</header>
+<div class="payment_body">
+	<div class=" " style="padding:0;">
+		<p class="selecthe">选择充值面额（元）</p>
+		<div class="col-xs-12">
+			<div style="padding: 0 10px;" class="form-group field-chargeAmount required">
+				<input type="text" id="chargeAmount" class="form-control custorm_count" placeholder="可输入10-10000的整数金额（元）">
+				<div class="help-block"></div>
+			</div>
+		</div>
+		<form id="payform" action="#" method="post">
+			<div class="boxflex1 paystyle" style="padding: 10px 15px 0;">
+			<div class="group_btn clear_fl">
+				<div class="btn_re">
+					<a class="btn_money on">64</a>
+				</div>
+				<div class="btn_re btn_center">
+					<a class="btn_money">153</a>
+				</div>
+				<div class="btn_re btn_center">
+					<a class="btn_money">340</a>
+				</div>
+				<div class="btn_re">
+					<a class="btn_money">859</a>
+				</div>
+				<div class="btn_re">
+					<a class="btn_money">1496</a>
+				</div>
+				<div class="btn_re">
+					<a class="btn_money">2309</a>
+				</div>
+				<div class="btn_re">
+					<a class="btn_money">3204</a>
+				</div>
+				<div class="btn_re">
+					<a class="btn_money">4398</a>
+				</div>
+			</div>
+			<input type="hidden" id="amount" name="amount" value="64">
+			<input type="hidden" id="type" name="type" value="2">
+		</div>
+			<div class="boxflex1">
+				<div class="moneyhead">充值方式</div>
+			</div>
+            <style type="text/css">
+                .check-payone {
+                    display: none
+                }
+                .checkPay {
+                    display: block;
+                }
+            </style>
+			<div class="payType">
+				<!-- <div class="boxflex1 paystyle checkImg2" style="border-top:0;" data-type="1">
+					<img src="/resource/home/img/pay.png" style="width: 20px;">
+					<span>快捷支付</span>
+					<img src="/resource/home/img/seleted.png" alt="" style="float:right;" class="check-payone checkPay">
+				</div> -->
+                <div class="boxflex1 paystyle checkImg2" style="border-top:0;" data-type="2">
+                    <img src="./resource/img/pay.png" style="width: 20px;">
+                    <span>网银支付</span>
+                    <img src="./resource/img/seleted.png" alt="" style="float:right;" class="check-payone checkPay">
+                </div>
+                <div class="boxflex1 paystyle checkImg2" style="border-top:0;" data-type="3">
+                    <img src="./resource/img/pay.png" style="width: 20px;">
+                    <span>快捷支付</span>
+                    <img src="./resource/img/notseleted.png" alt="" style="float:right;" class="check-payone checkPay">
+                </div>
+                <div class="boxflex1 paystyle checkImg2" style="border-top:0;" data-type="4">
+                    <img src="./resource/img/pay.png" style="width: 20px;">
+                    <span>支付宝扫码</span>
+                    <img src="./resource/img/notseleted.png" alt="" style="float:right;" class="check-payone checkPay">
+                </div>
+                <div class="boxflex1 paystyle checkImg2" style="border-top:0;" data-type="5">
+                    <img src="./resource/img/pay.png" style="width: 20px;">
+                    <span>支付宝H5</span>
+                    <img src="./resource/img/notseleted.png" alt="" style="float:right;" class="check-payone checkPay">
+                </div>
+			</div>
+			<div class="recharge-btn" id="payBtn">立即充值</div>
+
+			<p class="recharge-run">提示：请提前绑定银行卡！</p>
+		</form>
+	</div>
+</div>
+
+    
+
+
+
+<script src="./resource/js/jquery-2.2.0.min.js"></script>
+<script src="./resource/js/mui.min.js"></script>
+
+<script type="text/javascript" src="./resource/js/common.js"></script>
+<script>
+    $(function() {
+        var options = [68, 160, 340, 860, 1500, 2300, 3200, 4400];
+        $(".btn_money").each(function(index, el) {
+            var range = parseInt( 10 - Math.random() * 20 );
+            var count = options[index] + range;
+            $(el).html(count);
+        });
+
+        $('#type').val(2);
+        $(".btn_money").click(function() {
+            $(".on").removeClass("on");
+            $(this).addClass("on");
+            $('#amount').val($(this).html());
+            $("#chargeAmount").val( $(this).html() );
+        });
+
+        $(".btn_money.on").trigger("click");
+
+        $("#chargeAmount").blur(function(){
+            var val = $(this).val();
+            $(".btn_money.on").removeClass("on");
+            var amount = $(this).val();
+            var _this = $(this);
+            if( isNaN(amount) ){
+                $.alert("充值金额必须为数字", function(){
+                    _this.val(10);
+                    $('#amount').val(10);
+                    val = 10;
+                    $(".real_count").html(val);
+                });
+            }
+            if(amount < 0.01){
+                $.alert("充值金额不小于10元", function(){
+                    _this.val(10);
+                    $('#amount').val(10);
+                    val = 10;
+                    $(".real_count").html(val);
+                });
+            }
+            $('#amount').val(amount);
+        });
+
+        $('#payBtn').on('click', function(){
+            var type = $('#type').val();
+            var amount = $('#amount').val();
+            if(!amount || isNaN(amount) || amount <= 0){
+                alert('金额输入不合法!');
+                return false;
+            }
+            var _bind = "0";
+            if(_bind == "0" && type == 1){
+                var _jump = "/user/modify-card.html?callback=L3VzZXIvcmVjaGFyZ2UuaHRtbA%3D%3D";
+                $alert("请先绑定银行卡！");
+                setTimeout(function(){
+					window.location.href = _jump;
+                }, 1000);
+                return false;
+			}
+            $("#payform").submit();
+        });
+
+        $('.payType .paystyle').on('click', function(){
+            var type = $(this).data('type');
+            $('.payType .paystyle').each(function(){
+                if (type == $(this).data('type')) {
+                    $(this).find('.checkPay').attr({"src":"/resource/home/img/seleted.png"});
+                } else {
+                    $(this).find('.checkPay').attr({"src":"/resource/home/img/notseleted.png"});
+                }
+            });
+            $('#type').val(type);
+        });
+
+    });
+</script>
+</body></html>

@@ -23,12 +23,21 @@ public class AssetController extends BaseUtil{
 	@Resource
 	private AssetService assetService;
 	public static Logger log = Logger.getLogger(AssetController.class);
+	
 	@RequestMapping(value="/index",method=RequestMethod.GET)
 	public ModelAndView assetIndex(HttpServletRequest request,ModelAndView mv,Asset asset){
 		mv.addObject("asset", asset);
 		mv.setViewName("vedio/asset/index");
 		return mv;
 	}
+
+	@RequestMapping(value="/stock",method=RequestMethod.GET)
+	public ModelAndView stock(HttpServletRequest request,ModelAndView mv,String symbol){
+		mv.addObject("symbol", symbol);
+		mv.setViewName("stock/quotation");
+		return mv;
+	}	
+	
 	@RequestMapping(value="/getAssetList",method=RequestMethod.POST)
 	public void getAssetList(HttpServletResponse response,Asset asset,Integer page,Integer limit){
 		if(page == null){
