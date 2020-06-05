@@ -24,10 +24,22 @@
 </head>
 
 <body class="quick_body mui-ios mui-ios-10 mui-ios-10-3 mui-ios-11 mui-ios-11-0" style="">
+<script src="./resource/js/jquery-2.2.0.min.js"></script>
+<script src="./resource/js/mui.min.js"></script>
 
-    
+<script type="text/javascript" src="./resource/js/common.js"></script>
+<script type="text/javascript" src="./resource/js/config.js"></script>
+<script type="text/javascript" src="./resource/js/echarts.min.js"></script>
+<script type="text/javascript">
+  
+	/**---- 获取跳转参数更新页面内容 ----*/
+	 fullcode= getQueryString("symbol");
+	 //console.log(code);
+	 $alert(fullcode); 
+
+</script>  
 		<header class="has_back_top ">
-			<span id="guName" data-code="600519" data-fullcode="sh600519">
+			<span id="guName"  data-fullcode>
 				
 			</span>
 	
@@ -70,17 +82,15 @@
     	</div>
 
 
-    
+  
 
 
 
-<script src="./resource/js/jquery-2.2.0.min.js"></script>
-<script src="./resource/js/mui.min.js"></script>
 
-<script type="text/javascript" src="./resource/js/common.js"></script>
-<script type="text/javascript" src="./resource/js/config.js"></script>
-<script type="text/javascript" src="./resource/js/echarts.min.js"></script>
 <script type="text/javascript">
+$("#guName").data("fullcode",fullcode);
+// var test=$("#guName").data("fullcode");
+
     $(".add_zixuan").click(function(){
         var _url = '/user/add-optional.html',
             _code = $("#guName").data("code"),
@@ -101,11 +111,14 @@
 
         
 	/**---- 获取跳转参数更新页面内容 ----*/
-	 var code = getQueryString("symbol");
+	 //var  code= getQueryString("symbol");
+	// $alert(code);
 	// var url = config.api.base + config.api.getSharesByKeywords;
 	// $ajaxCustom(url, {keywords: code}, function(res){
-	// 	console.log(res);
+		//console.log(code);
+		
 	// });
 </script>
+
 <script type="text/javascript" src="./resource/js/candle.js"></script>
 </body></html>

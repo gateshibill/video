@@ -24,23 +24,10 @@
 </head>
 
 <body class="quick_body mui-ios mui-ios-10 mui-ios-10-3 mui-ios-11 mui-ios-11-0" style="">
-<script src="./resource/js/jquery-2.2.0.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.js"></script>
-<script src="./resource/js/mui.min.js"></script>
 
-<script type="text/javascript" src="./resource/js/common.js"></script>
-<script type="text/javascript" src="./resource/js/config.js"></script>
-<script type="text/javascript" src="./resource/js/echarts.min.js"></script>
-<script type="text/javascript">
-  
-	/**---- 获取跳转参数更新页面内容 ----*/
-	 fullcode= getQueryString("symbol");
-	 //console.log(code);
-	 $alert(fullcode); 
-
-</script>  
+    
 		<header class="has_back_top ">
-			<span id="guName" data-code  data-fullcode>
+			<span id="guName" data-code="600519" data-fullcode="sh600519">
 				
 			</span>
 	
@@ -83,11 +70,16 @@
     	</div>
 
 
-  
+    
 
 
 
+<script src="./resource/js/jquery-2.2.0.min.js"></script>
+<script src="./resource/js/mui.min.js"></script>
 
+<script type="text/javascript" src="./resource/js/common.js"></script>
+<script type="text/javascript" src="./resource/js/config.js"></script>
+<script type="text/javascript" src="./resource/js/echarts.min.js"></script>
 <script type="text/javascript">
     $(".add_zixuan").click(function(){
         var _url = '/user/add-optional.html',
@@ -103,22 +95,17 @@
         });
     });
 
-    var a=$('#guName').data('code',23)
     var kLineUrl = '/stock/kline.html';
     var areaLineUrl = "/stock/real.html";
     var refreshUrl = '/stock/inc-real.html';
-    var b=$('#guName').data('code')
-    console.log(b+"test")
+
         
 	/**---- 获取跳转参数更新页面内容 ----*/
-	 //var  code= getQueryString("symbol");
-	// $alert(code);
+	 var code = getQueryString("symbol");
 	// var url = config.api.base + config.api.getSharesByKeywords;
 	// $ajaxCustom(url, {keywords: code}, function(res){
-		//console.log(code);
-		
+	// 	console.log(res);
 	// });
 </script>
-
 <script type="text/javascript" src="./resource/js/candle.js"></script>
 </body></html>
