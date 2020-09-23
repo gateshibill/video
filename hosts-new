@@ -1,0 +1,109 @@
+# 注意 ansible 中 bool 类型首字母大写，正确写法为 True False, 不是true false
+
+[rio]
+10.206.16.14 run_init=True 
+10.206.16.17
+10.206.16.10
+
+[etcd]
+# 单数个节点
+10.206.16.14 NODE_NAME=etcd1
+10.206.16.17 NODE_NAME=etcd2
+10.206.16.10 NODE_NAME=etcd3
+
+[redis]
+10.206.16.14 role=sentinel,slave,master
+10.206.16.17 role=sentinel,slave
+10.206.16.10 role=sentinel,slave
+
+[mongo]
+10.206.16.14 run_mongo_js=True
+10.206.16.17
+10.206.16.10
+
+[elasticsearch]
+10.206.16.14
+10.206.16.17
+10.206.16.10
+
+[consul]
+10.206.16.14
+10.206.16.17
+10.206.16.10
+
+[all:vars]
+# 运行部署脚本机器需要与目标服务器之间能够进行 ssh 通信, 采用的是 ssh 证书访问
+# 1. 若尚未配置ssh证书，部署脚本会自动生成证书文件 id_rsa 在部署包根目录，并将 id_rsa.pub 推送到目标服务器
+# 需要设置目标服务器的root账号密码（server_password），并且保证所有机器的账号密码一致
+# 
+# 2. 管理员也可以手工配置ssh证书访问，并将使用的 id_rsa id_rsa.pub 文件放到部署包根目录
+# 这时则不再需要提供目标服务的root账号密码（server_password）
+
+# 目标服务器 root 账号密码
+server_password=Kaoshi888
+
+ansible_ssh_port=22
+ansible_ssh_user=root
+
+mongo_username="rio"
+mongo_password="ee06167b10a177f60766d35baa81955d"
+mongo_port=27017
+
+elasticsearch_username="rio"
+elasticsearch_password="ee06167b10a177f60766d35baa81955d"
+ES_JAVA_OPTS="-Xms2g -Xmx2g"
+
+# 默认为 redis 中第一行为 master
+redis_master_ip="{{groups['redis'][0]}}"
+redis_port=6379
+redis_name="default"
+redis_password="ee06167b10a177f60766d35baa81955d"
+redis_slave_port=16379
+redis_sentinel_port=26379
+
+# 开放平台域名，无域名可以填IP，默认为 RIO 集群的第一行的IP
+#rio_domain=test.rio3.oa.com
+rio_domain=119.45.15.51
+rio_protocol=http
+
+# 若 rio_protocol=https，则需要提供证书。
+# !! 注意证书需要放到部署包目录下, 与当前文件同级
+# 如果证书名为 rio.tencent.com.cer 和 rio.tencent.com.key，配置如下:
+https_cert_name="rio.tencent.com.cer"
+https_key_name="rio.tencent.com.key"
+#https_cert_name=""
+#https_key_name=""
+
+### 密钥请一定要修改###
+rio_token=K2pRkyqRVaMNTy8O4bblaXpaoTeGnVTm
+
+### 密钥请一定要修改###
+dex_smartgate_clientsecret=ZXhhbXBsZS1hcHAtc2VjcmV0
+
+### 密钥请一定要修改###
+atlas_dex_clientsecret=valkjfoiuvxzzxlfdsapoqwzfposafds
+
+### 若部署环境是内网环境，无法访问互联网，则需要配置该信息
+http_proxy=""
+https_proxy=""
+
+### 标识登录方式，目前只支持两种，其中0：表示帐号密码登录，1：表示短信验证码登录
+atlas_login_type=0
+### 短信网关的配置，当atlas_login_type=1时需要修改，否则留空即可。短信网关的详细配置可参考docs/短信网关配置.md
+atlas_sms_config={}
+
+### 用户中心集成配置
+#是否启用用户中心集成
+usercenter_enabled=true
+#默认同步间隔：1h
+usercenter_sync_interval=1h
+#默认重试间隔：1m
+usercenter_retry_interval=1m
+
+### 政务微信集成
+#政务微信api路径
+zwwx_api_url=""
+#Corp ID
+zwwx_corp_id=""
+#corpsecret
+zwwx_corp_secret=""
